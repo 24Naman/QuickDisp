@@ -5,9 +5,14 @@
     <string name="device_name">Device Name</string>
     <string name="show_username">Show Username</string>
     <string name="show_device_name">Show Device Name</string>
+    <string name="show_username_off">Show Username: No</string>
+    <string name="show_username_on">Show Username: Yes</string>
+    <string name="show_device_name_off">Show Device Name: No</string>
+    <string name="show_device_name_on">Show Device Name: Yes</string>
     <string name="change">Change</string>
     <string name="start_color">Start Color</string>
     <string name="end_color">End Color</string>
     <string name="white_color_hex">#FFFFFF</string>
     <string name="show_sample_color">Show sample color</string>
+    <string name="preferences">Preferences</string>
 </resources>
