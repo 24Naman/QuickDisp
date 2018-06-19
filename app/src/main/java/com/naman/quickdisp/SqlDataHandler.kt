@@ -1,5 +1,6 @@
 package com.naman.quickdisp
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -19,6 +20,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
     // column name
     private val startColor = "startColor"
     private val endColor = "endColor"
+    private val firstRun = "firstRun"
     private val autoCloseDialog = "autoCloseDialog"
     private val showUserNameOnDialog = "showUserNameOnDialog"
     private val showDeviceModelNumberOnDialog = "showDeviceModelNumberOnDialog"
@@ -27,57 +29,67 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
 
         val createTableStatement = """
             create table $tableName (
-                $startColor  string DEFAULT #FFFFFF,
-                $endColor    string DEFAULT #FFFFFF,
-                $autoCloseDialog int DEFAULT 0,
-                $showUserNameOnDialog    int DEFAULT 0,
-                $showDeviceModelNumberOnDialog   int DEFAULT 0
+                $startColor  string,
+                $endColor    string,
+                $firstRun   int
+                $autoCloseDialog int,
+                $showUserNameOnDialog    int,
+                $showDeviceModelNumberOnDialog   int
             )
         """.trimIndent()
 
         p0?.execSQL(createTableStatement)
+
+        p0?.insert(
+            tableName,
+            null,
+            ContentValues().let {
+                it.put(startColor, "FFFFFF")
+                it.put(endColor, "FFFFFF")
+                it.put(firstRun, 1)
+                it.put(autoCloseDialog, 0)
+                it.put(showUserNameOnDialog, 0)
+                it.put(showDeviceModelNumberOnDialog, 0)
+                it
+            }
+        )
     }
 
     override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        p0?.execSQL("DROP TABLE IF EXISTS $tableName")
-        onCreate(p0)
     }
 
     fun getData(): QuickSQLData {
-        val cursor = this.readableDatabase.query(
-            this@QuickSQL.tableName,
-            arrayOf(
-                startColor,
-                endColor,
-                autoCloseDialog,
-                showUserNameOnDialog,
-                showDeviceModelNumberOnDialog
-            ),
-            null,
-            null,
-            null,
-            null,
-            null
+        val cursor = this.readableDatabase.rawQuery(
+            "select * from ${this@QuickSQL.tableName};",
+            arrayOf()
         )
-
-        return cursor.use {
-            it.moveToFirst()
-            QuickSQLData(
-                it.getString(0),
-                it.getString(1),
-                when(it.getInt(2)) {
-                    1 -> true
-                    else -> false
-                },
-                when(it.getInt(3)) {
-                    1 -> true
-                    else -> false
-                },
-                when(it.getInt(4)) {
-                    1 -> true
-                    else -> false
-                }
+        if (cursor.count > 0) {
+            cursor.moveToFirst()
+            cursor.moveToFirst()
+            val quickSQLData = QuickSQLData(
+                cursor.getString(cursor.getColumnIndex(startColor)),
+                cursor.getString(cursor.getColumnIndex(endColor)),
+                cursor.getInt(cursor.getColumnIndex(autoCloseDialog)).toBoolean(),
+                cursor.getInt(cursor.getColumnIndex(showUserNameOnDialog)).toBoolean(),
+                cursor.getInt(cursor.getColumnIndex(showDeviceModelNumberOnDialog)).toBoolean()
             )
+            cursor.close()
+            return quickSQLData
         }
+        cursor.close()
+        return QuickSQLData(
+            "000000",
+            "000000",
+            false,
+            false,
+            false
+        )
+    }
+}
+
+private fun Int.toBoolean(): Boolean {
+    return when(this) {
+        1 -> true
+        else -> false
     }
 }
