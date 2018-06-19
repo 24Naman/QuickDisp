@@ -44,22 +44,34 @@ class MainActivity : Activity() {
 
         // start color gradient
         textView_startColorHex.text = data.startColor
-        val colorStart = Integer.parseInt(data.startColor, 16)
+        val colorStart = Integer.parseInt(
+            data.startColor.subSequence(1, data.startColor.length-1).toString(),
+            16
+        )
+        val startColorRed = colorStart shr 16 and 0xFF
+        val startColorGreen = colorStart and 0xFF
+        val startColorBlue = colorStart shr 24 and 0xFF
 
         imageView_startColor.setBackgroundColor(Color.rgb(
-            colorStart shr 16 and 0xFF,     // Red component
-            colorStart and 0xFF,        // Green component
-            colorStart shr 24 and 0xFF  // Blue component
+            startColorRed,
+            startColorGreen,
+            startColorBlue
         ))
 
         // end color gradient
         textView_startColorHex.text = data.endColor
-        val colorEnd = Integer.parseInt(data.startColor, 16)
+        val colorEnd = Integer.parseInt(
+            data.endColor.subSequence(1, data.startColor.length-1).toString(),
+            16
+        )
+        val endColorRed = colorEnd shr 16 and 0xFF
+        val endColorGreen = colorEnd and 0xFF
+        val endColorBlue = colorEnd shr 24 and 0xFF
 
         imageView_startColor.setBackgroundColor(Color.rgb(
-            colorEnd shr 16 and 0xFF,       // Red component
-            colorEnd and 0xFF,          // Green component
-            colorEnd shr 24 and 0xFF    // Blue component
+            endColorRed,
+            endColorGreen,
+            endColorBlue
         ))
 
         val message = data.autoCloseDialog.toString() + data.endColor +

@@ -15,4 +15,14 @@
     <string name="white_color_hex">#FFFFFF</string>
     <string name="show_sample_color">Show sample color</string>
     <string name="preferences">Preferences</string>
+    <string name="red_component">Red Component</string>
+    <string name="green_component">Green Component</string>
+    <string name="blue_component">Bue Component</string>
+    <string name="divider">Divider</string>
+    <string name="final_color">Final color</string>
+    <string name="rgb_value">RGB Value</string>
+    <string name="rrr">RRR</string>
+    <string name="ggg">GGG</string>
+    <string name="bbb">BBB</string>
+    <string name="done">Done</string>
 </resources>

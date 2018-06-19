@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ff4c00"
+    android:background="#ff2200"
     tools:context=".MainActivity">
 
     <android.support.v7.widget.CardView
@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#b150ff00"
+            android:background="#cdbbff00"
             android:orientation="horizontal">
 
             <ImageView
@@ -69,7 +69,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffa100">
+        android:background="#ffe4b5">
 
         <LinearLayout
             android:layout_width="match_parent"
