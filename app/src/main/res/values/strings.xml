@@ -25,4 +25,5 @@
     <string name="ggg">GGG</string>
     <string name="bbb">BBB</string>
     <string name="done">Done</string>
+    <string name="auto_close_dialog">Auto Close Dialog</string>
 </resources>

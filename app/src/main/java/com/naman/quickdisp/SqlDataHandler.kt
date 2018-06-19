@@ -55,27 +55,28 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         )
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-    }
+    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) = Unit
 
     fun getData(): QuickSQLData {
         val cursor = this.readableDatabase.rawQuery(
             "select * from ${this@QuickSQL.tableName};",
             arrayOf()
         )
-        if (cursor.count > 0) {
-            cursor.moveToFirst()
-            cursor.moveToFirst()
-            val quickSQLData = QuickSQLData(
-                cursor.getString(cursor.getColumnIndex(startColor)),
-                cursor.getString(cursor.getColumnIndex(endColor)),
-                cursor.getInt(cursor.getColumnIndex(autoCloseDialog)).toBoolean(),
-                cursor.getInt(cursor.getColumnIndex(showUserNameOnDialog)).toBoolean(),
-                cursor.getInt(cursor.getColumnIndex(showDeviceModelNumberOnDialog)).toBoolean()
-            )
-            cursor.close()
-            return quickSQLData
+        with(cursor) {
+            if (count > 0) {
+                moveToFirst()
+                val quickSQLData = QuickSQLData(
+                    getString(getColumnIndex(startColor)),
+                    getString(getColumnIndex(endColor)),
+                    getInt(getColumnIndex(autoCloseDialog)).trueOrFalse(),
+                    getInt(getColumnIndex(showUserNameOnDialog)).trueOrFalse(),
+                    getInt(getColumnIndex(showDeviceModelNumberOnDialog)).trueOrFalse()
+                )
+                close()
+                return quickSQLData
+            }
         }
+
         cursor.close()
         return QuickSQLData(
             "000000",
@@ -85,9 +86,58 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             false
         )
     }
+
+    fun updateShowUsername(state: Boolean) {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(showUserNameOnDialog, state.oneOrZero())
+                },
+                null,
+                null
+            )
+            close()
+        }
+    }
+
+    fun updateShowDeviceName(state: Boolean) {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(showDeviceModelNumberOnDialog, state.oneOrZero())
+                },
+                null,
+                null
+            )
+            close()
+        }
+    }
+
+    fun updateAutoClose(state: Boolean) {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(autoCloseDialog, state.oneOrZero())
+                },
+                null,
+                null
+            )
+            close()
+        }
+    }
 }
 
-private fun Int.toBoolean(): Boolean {
+private fun Boolean.oneOrZero(): Int {
+    return when(this) {
+        true -> 1
+        else -> 0
+    }
+}
+
+private fun Int.trueOrFalse(): Boolean {
     return when(this) {
         1 -> true
         else -> false
