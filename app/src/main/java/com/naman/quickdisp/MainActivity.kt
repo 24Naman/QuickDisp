@@ -169,16 +169,16 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-                    ""
+                    ""      // Show Empty String when permission to contacts is not given
                 }
                 false -> {
-                    ""
+                    ""      // Show Empty String when switch is unchecked
                 }
             }
             switch_showDeviceName -> {
                 textView_deviceName.text = when (this.isChecked) {
                     true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
-                    else -> ""
+                    else -> ""      // Show Empty String when switch is unchecked
                 }
             }
         }
