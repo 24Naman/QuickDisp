@@ -46,10 +46,10 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             ContentValues().let {
                 it.put(startColor, "FFFFFF")
                 it.put(endColor, "FFFFFF")
-                it.put(firstRun, 1)
-                it.put(autoCloseDialog, 0)
-                it.put(showUserNameOnDialog, 0)
-                it.put(showDeviceModelNumberOnDialog, 0)
+                it.put(firstRun, true.oneOrZero())
+                it.put(autoCloseDialog, false.oneOrZero())
+                it.put(showUserNameOnDialog, false.oneOrZero())
+                it.put(showDeviceModelNumberOnDialog, false.oneOrZero())
                 it
             }
         )
