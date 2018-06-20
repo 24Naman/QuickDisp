@@ -31,7 +31,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             create table $tableName (
                 $startColor  string,
                 $endColor    string,
-                $firstRun   int
+                $firstRun   int,
                 $autoCloseDialog int,
                 $showUserNameOnDialog    int,
                 $showDeviceModelNumberOnDialog   int
@@ -76,7 +76,6 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                 return quickSQLData
             }
         }
-
         cursor.close()
         return QuickSQLData(
             "000000",
