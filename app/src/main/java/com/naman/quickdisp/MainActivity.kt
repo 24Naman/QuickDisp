@@ -20,9 +20,6 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val deviceModel = "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
-        textView_deviceName.text = deviceModel
-
         quickSQL = QuickSQL(this)
         data = quickSQL.getData()
         quickSQL.close()
@@ -186,11 +183,14 @@ class MainActivity : Activity() {
                         ).show()
                         switch_showUsername.isChecked = true
                     }
-                    else -> Toast.makeText(
-                        this,
-                        "${permissions?.get(0)} Not Granted",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    else -> {
+                        Toast.makeText(
+                            this,
+                            "${permissions?.get(0)} Not Granted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        switch_showUsername.isChecked = false
+                    }
                 }
             }
         }
