@@ -8,8 +8,8 @@
     <string name="switch_off">N</string>
     <string name="switch_on">Y</string>
     <string name="change">Change</string>
-    <string name="start_color">Gradient Start Color</string>
-    <string name="end_color">Gradient End Color</string>
+    <string name="start_color">Title Start Gradient</string>
+    <string name="end_color">Title End Gradient</string>
     <string name="white_color_hex">#FFFFFF</string>
     <string name="show_sample_color">Show sample color</string>
     <string name="preferences">Preferences</string>
