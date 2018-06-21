@@ -100,22 +100,10 @@ class MainActivity : Activity() {
             },
                 Toast.LENGTH_SHORT).show()
         }
-    }
 
-    override fun onStart() {
-        super.onStart()
-
-        switch_showUsername.isChecked = data.showUserNameOnDialog
-        switch_showDeviceName.isChecked = data.showDeviceModelNumberOnDialog
-        switch_autoClose.isChecked = data.autoCloseDialog
-
-        switch_showUsername.updateTextViews()
-        switch_showDeviceName.updateTextViews()
-    }
-
-    private fun Switch.updateTextViews() {
-        when (this) {
-            switch_showUsername -> textView_userName.text = when (this.isChecked) {
+        switch_showUsername.setOnCheckedChangeListener { _, boolean ->
+            var username = resources.getString(R.string.username)
+            textView_userName.text = when (boolean) {
                 true -> {
                     when (checkSelfPermission(Manifest.permission.READ_CONTACTS)) {
                         PackageManager.PERMISSION_GRANTED -> {
@@ -126,9 +114,9 @@ class MainActivity : Activity() {
                                     null,
                                     null,
                                     null
-                                ).apply {
-                                    moveToFirst()
-                                    getString(getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                                ).let {
+                                    it.moveToFirst()
+                                    username = it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
                                 }
                             }
                         }
@@ -151,17 +139,13 @@ class MainActivity : Activity() {
                                             )
                                         )
                                         this.setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
-                                            setOnClickListener {
                                                 requestPermissions(
                                                     arrayOf(Manifest.permission.READ_CONTACTS),
                                                     1234
                                                 )
-                                            }
                                         }
                                         this.setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
-                                            setOnClickListener {
                                                 this@MainActivity.switch_showUsername.isChecked = false
-                                            }
                                         }
                                         create()
                                     }.show()
@@ -169,16 +153,31 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-                    ""      // Show Empty String when permission to contacts is not given
+                    username      // Show Empty String when permission to contacts is not given
                 }
                 false -> {
-                    ""      // Show Empty String when switch is unchecked
+                    username      // Show Empty String when switch is unchecked
                 }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        switch_showUsername.isChecked = data.showUserNameOnDialog
+        switch_showDeviceName.isChecked = data.showDeviceModelNumberOnDialog
+        switch_autoClose.isChecked = data.autoCloseDialog
+
+        switch_showDeviceName.updateTextViews()
+    }
+
+    private fun Switch.updateTextViews() {
+        when (this) {
             switch_showDeviceName -> {
                 textView_deviceName.text = when (this.isChecked) {
                     true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
-                    else -> ""      // Show Empty String when switch is unchecked
+                    else -> resources.getString(R.string.device_name)
                 }
             }
         }
@@ -200,7 +199,7 @@ class MainActivity : Activity() {
                             "${permissions?.get(0)} Granted",
                             Toast.LENGTH_LONG
                         ).show()
-                        switch_showUsername.updateTextViews()
+                        switch_showUsername.isChecked = true
                     }
                     else -> Toast.makeText(
                         this,
