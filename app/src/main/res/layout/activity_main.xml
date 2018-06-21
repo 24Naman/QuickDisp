@@ -227,7 +227,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="@string/white_color_hex" />
+                                    android:text="@string/white_color_hex"
+                                    android:textColor="@color/metallicRed" />
 
                                 <Button
                                     android:id="@+id/button_changeStartColor"
@@ -314,6 +315,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
+                                    android:textColor="@color/metallicRed"
                                     android:text="@string/white_color_hex" />
 
                                 <Button
