@@ -13,11 +13,61 @@
                       <PersistentState>
                         <option name="children">
                           <map>
+                            <entry key="actionbar">
+                              <value>
+                                <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="clipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_format_clear_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="outputName" value="ic_reset_settings" />
+                                      <entry key="theme" value="CUSTOM" />
+                                      <entry key="themeColor" value="ff0000" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
                                   <option name="children">
                                     <map>
+                                      <entry key="foregroundClipArt">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="foregroundClipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_format_clear_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                       <entry key="foregroundImage">
                                         <value>
                                           <PersistentState>
@@ -35,10 +85,13 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="00ffff" />
+                                      <entry key="backgroundColor" value="ff0000" />
+                                      <entry key="backgroundLayerName" value="ic_reset_setttings_bg" />
+                                      <entry key="foregroundAssetType" value="CLIP_ART" />
                                       <entry key="foregroundImage" value="C:\Users\naman\Downloads\icons8-android-64.png" />
+                                      <entry key="foregroundLayerName" value="ic_reset_setttings_fg" />
+                                      <entry key="outputName" value="ic_reset_setttings" />
                                       <entry key="showGrid" value="true" />
-                                      <entry key="showSafeZone" value="false" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -87,7 +140,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

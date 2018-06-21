@@ -28,4 +28,5 @@
     <string name="dialog_no">No</string>
     <string name="access_contacts_permission">Access Contacts?</string>
     <string name="contacts_icon">Contacts Icon</string>
+    <string name="reset_menu_option">Reset Settings</string>
 </resources>

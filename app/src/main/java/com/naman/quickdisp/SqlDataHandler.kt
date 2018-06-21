@@ -63,27 +63,49 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             arrayOf()
         )
         with(cursor) {
-            if (count > 0) {
-                moveToFirst()
-                val quickSQLData = QuickSQLData(
-                    getString(getColumnIndex(startColor)),
-                    getString(getColumnIndex(endColor)),
-                    getInt(getColumnIndex(autoCloseDialog)).trueOrFalse(),
-                    getInt(getColumnIndex(showUserNameOnDialog)).trueOrFalse(),
-                    getInt(getColumnIndex(showDeviceModelNumberOnDialog)).trueOrFalse()
-                )
-                close()
-                return quickSQLData
+            when {
+                count > 0 -> {
+                    moveToFirst()
+                    val quickSQLData = QuickSQLData(
+                        getString(getColumnIndex(startColor)),
+                        getString(getColumnIndex(endColor)),
+                        getInt(getColumnIndex(autoCloseDialog)).trueOrFalse(),
+                        getInt(getColumnIndex(showUserNameOnDialog)).trueOrFalse(),
+                        getInt(getColumnIndex(showDeviceModelNumberOnDialog)).trueOrFalse()
+                    )
+                    close()
+                    return quickSQLData
+                }
+                else -> {
+                    close()
+                    return QuickSQLData(
+                        "FFFFFF",
+                        "FFFFFF",
+                        false,
+                        false,
+                        false
+                    )
+                }
             }
         }
-        cursor.close()
-        return QuickSQLData(
-            "000000",
-            "000000",
-            false,
-            false,
-            false
-        )
+    }
+
+    fun resetData() {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(startColor, "FFFFFF")
+                    put(endColor, "FFFFFF")
+                    put(autoCloseDialog, false.oneOrZero())
+                    put(showUserNameOnDialog, false.oneOrZero())
+                    put(showDeviceModelNumberOnDialog, false.oneOrZero())
+                },
+                null,
+                null
+            )
+            close()
+        }
     }
 
     fun updateShowUsername(state: Boolean) {

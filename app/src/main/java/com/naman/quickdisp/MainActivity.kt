@@ -8,6 +8,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -25,33 +27,127 @@ class MainActivity : Activity() {
         quickSQL.close()
 
         bindListeners()
+        initialize()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        initializeSwitches()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.menuItem_resetButton -> {
+                AlertDialog.Builder(this@MainActivity).apply {
+                    this.setTitle("Reset App Settings")
+                    this.setMessage("This will change the preferences and color to the default " +
+                            "setting permanently.")
+                    this.setIcon(
+                        resources.getDrawable(
+                            R.drawable.ic_reset_settings,
+                            context.theme
+                        )
+                    )
+                    val createdDialog = create()
+                    this.setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
+                        com.naman.quickdisp.QuickSQL(this@MainActivity).apply {
+                            resetData()
+                            close()
+                        }
+                        initialize()
+                    }
+                    this.setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
+                        createdDialog.dismiss()
+                    }
+                }.show()
+            }
+        }
+        return true
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>?,
+        grantResults: IntArray?
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            1234 -> {
+                when (grantResults?.get(0)) {
+                    PackageManager.PERMISSION_GRANTED -> {
+                        Toast.makeText(
+                            this,
+                            "${permissions?.get(0)} Granted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        switch_showUsername.isChecked = true
+                    }
+                    else -> {
+                        Toast.makeText(
+                            this,
+                            "${permissions?.get(0)} Not Granted",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        switch_showUsername.isChecked = false
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initializeSwitches() {
+        quickSQL = QuickSQL(this)
+        data = quickSQL.getData()
+        // setting the state of switches
+        data.apply {
+            switch_showUsername.isChecked = showUserNameOnDialog
+            switch_showDeviceName.isChecked = showDeviceModelNumberOnDialog
+            switch_autoClose.isChecked = autoCloseDialog
+        }
+    }
+
+    private fun initialize() {
+        initializeSwitches()
+
         // start color gradient
         val startColorHex = "#${data.startColor}"
         textView_startColorHex.text = startColorHex
+        // converting color from hex code to RGB format
         val colorStart = Integer.parseInt(data.endColor, 16)
         val startColorRed = colorStart shr 16 and 0xFF
         val startColorGreen = colorStart shr 8 and 0xFF
         val startColorBlue = colorStart and 0xFF
 
-        imageView_startColor.setBackgroundColor(Color.rgb(
-            startColorRed,
-            startColorGreen,
-            startColorBlue
-        ))
+        imageView_startColor.setBackgroundColor(
+            Color.rgb(
+                startColorRed,
+                startColorGreen,
+                startColorBlue
+            ))
 
         // end color gradient
         val endColorHex = "#${data.endColor}"
         textView_endColorHex.text = endColorHex
         val colorEnd = Integer.parseInt(data.endColor, 16)
+        // converting color from hex code to RGB format
         val endColorRed = colorEnd shr 16 and 0xFF
         val endColorGreen = colorEnd shr 8 and 0xFF
         val endColorBlue = colorEnd and 0xFF
 
-        imageView_endColor.setBackgroundColor(Color.rgb(
-            endColorRed,
-            endColorGreen,
-            endColorBlue
-        ))
+        imageView_endColor.setBackgroundColor(
+            Color.rgb(
+                endColorRed,
+                endColorGreen,
+                endColorBlue
+            )
+        )
     }
 
     private fun bindListeners() {
@@ -149,48 +245,6 @@ class MainActivity : Activity() {
                 }
                 false -> {
                     username      // Show Empty String when switch is unchecked
-                }
-            }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        quickSQL.getData().apply {
-            switch_showUsername.isChecked = showUserNameOnDialog
-            switch_showDeviceName.isChecked = showDeviceModelNumberOnDialog
-            switch_autoClose.isChecked = autoCloseDialog
-        }
-    }
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>?,
-        grantResults: IntArray?
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            1234 -> {
-                when (grantResults?.get(0)) {
-                    PackageManager.PERMISSION_GRANTED -> {
-                        Toast.makeText(
-                            this,
-                            "${permissions?.get(0)} Granted",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        switch_showUsername.isChecked = true
-                    }
-                    else -> {
-                        Toast.makeText(
-                            this,
-                            "${permissions?.get(0)} Not Granted",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        switch_showUsername.isChecked = false
-                    }
                 }
             }
         }
