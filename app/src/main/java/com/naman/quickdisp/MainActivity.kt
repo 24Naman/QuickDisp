@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.ContactsContract
-import android.widget.Switch
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -59,36 +58,6 @@ class MainActivity : Activity() {
     }
 
     private fun bindListeners() {
-        switch_showUsername.setOnClickListener {
-            QuickSQL(this).apply {
-                updateShowUsername(switch_showUsername.isChecked)
-                close()
-            }
-            Toast.makeText(this, when (switch_showUsername.isChecked) {
-                true -> "Username will be shown"
-                else -> "Username will not be shown"
-            },
-                Toast.LENGTH_SHORT).show()
-
-            // update the User name textView
-            (it as Switch).updateTextViews()
-        }
-
-        switch_showDeviceName.setOnClickListener {
-            QuickSQL(this).apply {
-                updateShowDeviceName(switch_showDeviceName.isChecked)
-                close()
-            }
-            Toast.makeText(this, when (switch_showDeviceName.isChecked) {
-                true -> "Device Name will be shown"
-                else -> "Device Name will not be shown"
-            },
-                Toast.LENGTH_SHORT).show()
-
-            // update the Device name textView
-            (it as Switch).updateTextViews()
-        }
-
         switch_autoClose.setOnClickListener {
             QuickSQL(this).apply {
                 updateAutoClose(switch_autoClose.isChecked)
@@ -101,7 +70,33 @@ class MainActivity : Activity() {
                 Toast.LENGTH_SHORT).show()
         }
 
+        switch_showDeviceName.setOnCheckedChangeListener { _, boolean ->
+            QuickSQL(this).apply {
+                updateShowDeviceName(switch_showDeviceName.isChecked)
+                close()
+            }
+            textView_deviceName.text = when (boolean) {
+                true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
+                else -> resources.getString(R.string.device_name)
+            }
+            Toast.makeText(this, when (switch_showDeviceName.isChecked) {
+                true -> "Device Name will be shown"
+                else -> "Device Name will not be shown"
+            },
+                Toast.LENGTH_SHORT).show()
+        }
+
         switch_showUsername.setOnCheckedChangeListener { _, boolean ->
+            QuickSQL(this).apply {
+                updateShowUsername(boolean)
+                close()
+            }
+            Toast.makeText(this, when (boolean) {
+                true -> "Username will be shown"
+                else -> "Username will not be shown"
+            },
+                Toast.LENGTH_SHORT).show()
+
             var username = resources.getString(R.string.username)
             textView_userName.text = when (boolean) {
                 true -> {
@@ -168,20 +163,8 @@ class MainActivity : Activity() {
         switch_showUsername.isChecked = data.showUserNameOnDialog
         switch_showDeviceName.isChecked = data.showDeviceModelNumberOnDialog
         switch_autoClose.isChecked = data.autoCloseDialog
-
-        switch_showDeviceName.updateTextViews()
     }
 
-    private fun Switch.updateTextViews() {
-        when (this) {
-            switch_showDeviceName -> {
-                textView_deviceName.text = when (this.isChecked) {
-                    true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
-                    else -> resources.getString(R.string.device_name)
-                }
-            }
-        }
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
