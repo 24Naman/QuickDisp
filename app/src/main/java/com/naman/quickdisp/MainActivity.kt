@@ -156,11 +156,14 @@ class MainActivity : Activity() {
                 updateAutoClose(switch_autoClose.isChecked)
                 close()
             }
-            Toast.makeText(this, when (switch_autoClose.isChecked) {
-                true -> "Dialog will be closed on selecting any option"
-                else -> "Username will not be closed until user select the close button"
-            },
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                when (switch_autoClose.isChecked) {
+                    true -> "Dialog will be closed on selecting any option"
+                    else -> "Username will not be closed until user select the close button"
+                },
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         switch_showDeviceName.setOnCheckedChangeListener { _, boolean ->
@@ -172,11 +175,14 @@ class MainActivity : Activity() {
                 true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
                 else -> resources.getString(R.string.device_name)
             }
-            Toast.makeText(this, when (switch_showDeviceName.isChecked) {
-                true -> "Device Name will be shown"
-                else -> "Device Name will not be shown"
-            },
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                when (switch_showDeviceName.isChecked) {
+                    true -> "Device Name will be shown"
+                    else -> "Device Name will not be shown"
+                },
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         switch_showUsername.setOnCheckedChangeListener { _, boolean ->
@@ -184,11 +190,14 @@ class MainActivity : Activity() {
                 updateShowUsername(boolean)
                 close()
             }
-            Toast.makeText(this, when (boolean) {
-                true -> "Username will be shown"
-                else -> "Username will not be shown"
-            },
-                Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                when (boolean) {
+                    true -> "Username will be shown"
+                    else -> "Username will not be shown"
+                },
+                Toast.LENGTH_SHORT
+            ).show()
 
             var username = resources.getString(R.string.username)
             textView_userName.text = when (boolean) {
