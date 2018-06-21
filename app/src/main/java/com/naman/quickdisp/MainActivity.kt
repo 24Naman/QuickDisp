@@ -160,9 +160,11 @@ class MainActivity : Activity() {
     override fun onStart() {
         super.onStart()
 
-        switch_showUsername.isChecked = data.showUserNameOnDialog
-        switch_showDeviceName.isChecked = data.showDeviceModelNumberOnDialog
-        switch_autoClose.isChecked = data.autoCloseDialog
+        quickSQL.getData().apply {
+            switch_showUsername.isChecked = showUserNameOnDialog
+            switch_showDeviceName.isChecked = showDeviceModelNumberOnDialog
+            switch_autoClose.isChecked = autoCloseDialog
+        }
     }
 
 
