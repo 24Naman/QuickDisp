@@ -3,6 +3,7 @@ package com.naman.quickdisp
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -10,8 +11,10 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SeekBar
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.color_picker_dialog.*
 
 class MainActivity : Activity() {
 
@@ -254,6 +257,142 @@ class MainActivity : Activity() {
                 }
                 false -> {
                     username      // Show Empty String when switch is unchecked
+                }
+            }
+        }
+
+        button_changeStartColor.setOnClickListener {
+            with(Dialog(this)) {
+                this.setContentView(R.layout.color_picker_dialog)
+
+                data = quickSQL.getData()
+
+                seekBar_redComponent.progress = Integer.parseInt(data.startColor) shr 16 and 0xFF
+                seekBar_greenComponent.progress = Integer.parseInt(data.startColor) shr 8 and 0xFF
+                seekBar_blueComponent.progress = Integer.parseInt(data.startColor) and 0xFF
+
+                cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                    seekBar_redComponent.progress,
+                    seekBar_greenComponent.progress,
+                    seekBar_blueComponent.progress
+                ))
+
+                seekBar_redComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                seekBar_greenComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                seekBar_blueComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                button_colorPickerCancel.setOnClickListener {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                button_colorPickerOk.setOnClickListener {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+            }
+        }
+
+        button_changeEndColor.setOnClickListener {
+            with(Dialog(this)) {
+                this.setContentView(R.layout.color_picker_dialog)
+
+                data = quickSQL.getData()
+
+                seekBar_redComponent.progress = Integer.parseInt(data.endColor) shr 16 and 0xFF
+                seekBar_greenComponent.progress = Integer.parseInt(data.endColor) shr 8 and 0xFF
+                seekBar_blueComponent.progress = Integer.parseInt(data.endColor) and 0xFF
+
+                cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                    seekBar_redComponent.progress,
+                    seekBar_greenComponent.progress,
+                    seekBar_blueComponent.progress
+                ))
+
+                seekBar_redComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                seekBar_greenComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                seekBar_blueComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStartTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+
+                    override fun onStopTrackingTouch(p0: SeekBar?) {
+                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    }
+                })
+
+                button_colorPickerCancel.setOnClickListener {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                button_colorPickerOk.setOnClickListener {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
             }
         }

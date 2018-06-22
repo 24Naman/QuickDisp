@@ -19,9 +19,9 @@
     <string name="divider">Divider</string>
     <string name="final_color">Final color</string>
     <string name="rgb_value">RGB Value</string>
-    <string name="rrr">RRR</string>
-    <string name="ggg">GGG</string>
-    <string name="bbb">BBB</string>
+    <string name="rrr">RR</string>
+    <string name="ggg">GG</string>
+    <string name="bbb">BB</string>
     <string name="done">Done</string>
     <string name="auto_close_dialog">Auto Close Dialog</string>
     <string name="dialog_yes">Yes</string>
@@ -29,4 +29,6 @@
     <string name="access_contacts_permission">Access Contacts?</string>
     <string name="contacts_icon">Contacts Icon</string>
     <string name="reset_menu_option">Reset Settings</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
