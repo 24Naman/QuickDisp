@@ -265,6 +265,8 @@ class MainActivity : Activity() {
             with(Dialog(this)) {
                 this.setContentView(R.layout.color_picker_dialog)
 
+                setTitle("Select Gradient Start Color")
+
                 data = quickSQL.getData()
 
                 seekBar_redComponent.progress = Integer.parseInt(data.startColor) shr 16 and 0xFF
@@ -332,6 +334,8 @@ class MainActivity : Activity() {
         button_changeEndColor.setOnClickListener {
             with(Dialog(this)) {
                 this.setContentView(R.layout.color_picker_dialog)
+
+                setTitle("Select Gradient End Color")
 
                 data = quickSQL.getData()
 
