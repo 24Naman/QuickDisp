@@ -108,6 +108,34 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         }
     }
 
+    fun updateGradientStartColor(hexCode: String) {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(startColor, hexCode.toUpperCase())
+                },
+                null,
+                null
+            )
+            close()
+        }
+    }
+
+    fun updateGradientEndColor(hexCode: String) {
+        with(writableDatabase) {
+            this.update(
+                tableName,
+                ContentValues().apply {
+                    put(endColor, hexCode.toUpperCase())
+                },
+                null,
+                null
+            )
+            close()
+        }
+    }
+
     fun updateShowUsername(state: Boolean) {
         with(writableDatabase) {
             this.update(

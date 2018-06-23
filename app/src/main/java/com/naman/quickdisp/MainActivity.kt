@@ -119,11 +119,11 @@ class MainActivity : Activity() {
     private fun initialize() {
         initializeSwitches()
 
-        // start color gradient
+        // start gradient color
         val startColorHex = "#${data.startColor}"
         textView_startColorHex.text = startColorHex
         // converting color from hex code to RGB format
-        val colorStart = Integer.parseInt(data.endColor, 16)
+        val colorStart = Integer.parseInt(data.startColor, 16)
         val startColorRed = colorStart shr 16 and 0xFF
         val startColorGreen = colorStart shr 8 and 0xFF
         val startColorBlue = colorStart and 0xFF
@@ -133,9 +133,10 @@ class MainActivity : Activity() {
                 startColorRed,
                 startColorGreen,
                 startColorBlue
-            ))
+            )
+        )
 
-        // end color gradient
+        // end gradient color
         val endColorHex = "#${data.endColor}"
         textView_endColorHex.text = endColorHex
         val colorEnd = Integer.parseInt(data.endColor, 16)
@@ -261,7 +262,13 @@ class MainActivity : Activity() {
             }
         }
 
+        /*
+        * Gradient Start Color: START
+        * */
         button_changeStartColor.setOnClickListener {
+            /*
+            * updating gradient start color
+            * */
             with(Dialog(this)) {
                 this.setContentView(R.layout.color_picker_dialog)
 
@@ -269,69 +276,177 @@ class MainActivity : Activity() {
 
                 data = quickSQL.getData()
 
-                seekBar_redComponent.progress = Integer.parseInt(data.startColor) shr 16 and 0xFF
-                seekBar_greenComponent.progress = Integer.parseInt(data.startColor) shr 8 and 0xFF
-                seekBar_blueComponent.progress = Integer.parseInt(data.startColor) and 0xFF
+                // converting HexCode to RGB value
+                seekBar_redComponent.progress = Integer.parseInt(data.startColor, 16) shr 16 and 0xFF
+                seekBar_greenComponent.progress = Integer.parseInt(data.startColor, 16) shr 8 and 0xFF
+                seekBar_blueComponent.progress = Integer.parseInt(data.startColor, 16) and 0xFF
 
                 cardView_finalColor.setCardBackgroundColor(Color.rgb(
                     seekBar_redComponent.progress,
                     seekBar_greenComponent.progress,
                     seekBar_blueComponent.progress
                 ))
-
+                /*
+                * Gradient Start RED Component: RED_START
+                * */
                 seekBar_redComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_redComponent.setBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress, 0,0
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start RED Component: RED_END
+                * */
 
+                /*
+                * Gradient Start GREEN Component: GREEN_START
+                * */
                 seekBar_greenComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_greenComponent.setBackgroundColor(Color.rgb(
+                            0, seekBar_greenComponent.progress,0
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start GREEN Component: GREEN_END
+                * */
 
+                /*
+                * Gradient Start BLUE Component: BLUE_START
+                * */
                 seekBar_blueComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_blueComponent.setBackgroundColor(Color.rgb(
+                            0, 0,seekBar_blueComponent.progress
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start BLUE Component: BLUE_END
+                * */
 
                 button_colorPickerCancel.setOnClickListener {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    dismiss()
                 }
 
                 button_colorPickerOk.setOnClickListener {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    with(QuickSQL(this@MainActivity)) {
+                        updateGradientStartColor(textView_hexCode.text.subSequence(1, 7).toString().toUpperCase())
+                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
+                        this@MainActivity.textView_startColorHex.text = hexCode
+                        this@MainActivity.imageView_startColor.setBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        close()
+                    }
+                    dismiss()
                 }
+                show()
             }
         }
+        /*
+        * Gradient Start Color: END
+        * */
 
+        /*
+        * Gradient End Color: START
+        * */
         button_changeEndColor.setOnClickListener {
+            /*
+            * updating gradient start color
+            * */
             with(Dialog(this)) {
                 this.setContentView(R.layout.color_picker_dialog)
 
@@ -339,66 +454,168 @@ class MainActivity : Activity() {
 
                 data = quickSQL.getData()
 
-                seekBar_redComponent.progress = Integer.parseInt(data.endColor) shr 16 and 0xFF
-                seekBar_greenComponent.progress = Integer.parseInt(data.endColor) shr 8 and 0xFF
-                seekBar_blueComponent.progress = Integer.parseInt(data.endColor) and 0xFF
+                // converting HexCode to RGB value
+                seekBar_redComponent.progress = Integer.parseInt(data.endColor, 16) shr 16 and 0xFF
+                seekBar_greenComponent.progress = Integer.parseInt(data.endColor, 16) shr 8 and 0xFF
+                seekBar_blueComponent.progress = Integer.parseInt(data.endColor, 16) and 0xFF
 
                 cardView_finalColor.setCardBackgroundColor(Color.rgb(
                     seekBar_redComponent.progress,
                     seekBar_greenComponent.progress,
                     seekBar_blueComponent.progress
                 ))
-
+                /*
+                * Gradient Start RED Component: RED_START
+                * */
                 seekBar_redComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_redComponent.setBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress, 0,0
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start RED Component: RED_END
+                * */
 
+                /*
+                * Gradient Start GREEN Component: GREEN_START
+                * */
                 seekBar_greenComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_greenComponent.setBackgroundColor(Color.rgb(
+                            0, seekBar_greenComponent.progress,0
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start GREEN Component: GREEN_END
+                * */
 
+                /*
+                * Gradient Start BLUE Component: BLUE_START
+                * */
                 seekBar_blueComponent.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        imageView_blueComponent.setBackgroundColor(Color.rgb(
+                            0, 0,seekBar_blueComponent.progress
+                        ))
+
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
 
                     override fun onStartTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     }
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
-                        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                        cardView_finalColor.setCardBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        textView_hexCode.text = String.format(
+                            "#%02x%02x%02x",
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        )
                     }
                 })
+                /*
+                * Gradient Start BLUE Component: BLUE_END
+                * */
 
                 button_colorPickerCancel.setOnClickListener {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    dismiss()
                 }
 
                 button_colorPickerOk.setOnClickListener {
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    with(QuickSQL(this@MainActivity)) {
+                        updateGradientEndColor(textView_hexCode.text.subSequence(1, 7).toString().toUpperCase())
+                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
+                        this@MainActivity.textView_endColorHex.text = hexCode
+                        this@MainActivity.imageView_endColor.setBackgroundColor(Color.rgb(
+                            seekBar_redComponent.progress,
+                            seekBar_greenComponent.progress,
+                            seekBar_blueComponent.progress
+                        ))
+                        close()
+                    }
+                    dismiss()
                 }
+                show()
             }
         }
+        /*
+        * Gradient End Color: END
+        * */
     }
 }
