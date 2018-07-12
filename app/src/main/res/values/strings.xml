@@ -26,4 +26,14 @@
     <string name="reset_menu_option">Reset Settings</string>
     <string name="ok">Okay</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="user_s">User\'s</string>
+    <string name="device">Device</string>
+    <string name="show_username_from_contacts">Show Username From Contacts</string>
+    <string name="show_name_from_device_info">Show Name From Device Info</string>
+    <string name="close_dialog_on_any_option">Close Dialog On Selecting Any Option</string>
+    <string name="fifteen_seconds">Fifteen Seconds</string>
+    <string name="thirty_seconds">Thirty Seconds</string>
+    <string name="one_minute">One Minute</string>
+    <string name="two_minutes">Two Minutes</string>
 </resources>

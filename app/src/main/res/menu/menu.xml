@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menuItem_resetButton"
-        android:checkable="true"
+        android:checkable="false"
         android:enabled="true"
         android:icon="@drawable/ic_reset_settings"
         android:title="@string/reset_menu_option"

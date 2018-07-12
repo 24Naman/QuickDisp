@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.Menu
@@ -15,6 +16,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.color_picker_dialog.*
+import kotlinx.android.synthetic.main.quick_display_title.*
 
 class MainActivity : Activity() {
 
@@ -82,24 +84,14 @@ class MainActivity : Activity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            1234 -> {
-                when (grantResults?.get(0)) {
-                    PackageManager.PERMISSION_GRANTED -> {
-                        Toast.makeText(
-                            this,
-                            "${permissions?.get(0)} Granted",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        switch_showUsername.isChecked = true
-                    }
-                    else -> {
-                        Toast.makeText(
-                            this,
-                            "${permissions?.get(0)} Not Granted",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        switch_showUsername.isChecked = false
-                    }
+            1234 -> when (grantResults?.get(0)) {
+                PackageManager.PERMISSION_GRANTED -> {
+                    raiseLongToast("${permissions?.get(0)} Granted")
+                    switch_showUsername.isChecked = true
+                }
+                else -> {
+                    raiseLongToast("${permissions?.get(0)} Not Granted")
+                    switch_showUsername.isChecked = false
                 }
             }
         }
@@ -116,42 +108,37 @@ class MainActivity : Activity() {
         }
     }
 
-    private fun initialize() {
-        initializeSwitches()
+    private fun initializeDetailsCard() {
+        quickSQL = QuickSQL(this)
+        data = quickSQL.getData()
 
         // start gradient color
-        val startColorHex = "#${data.startColor}"
-        textView_startColorHex.text = startColorHex
-        // converting color from hex code to RGB format
-        val colorStart = Integer.parseInt(data.startColor, 16)
-        val startColorRed = colorStart shr 16 and 0xFF
-        val startColorGreen = colorStart shr 8 and 0xFF
-        val startColorBlue = colorStart and 0xFF
-
-        imageView_startColor.setBackgroundColor(
-            Color.rgb(
-                startColorRed,
-                startColorGreen,
-                startColorBlue
-            )
-        )
+        textView_startColorHex.text = data.startColorHex
+        imageView_startColor.setBackgroundColor(data.startColorRgb)
 
         // end gradient color
-        val endColorHex = "#${data.endColor}"
-        textView_endColorHex.text = endColorHex
-        val colorEnd = Integer.parseInt(data.endColor, 16)
-        // converting color from hex code to RGB format
-        val endColorRed = colorEnd shr 16 and 0xFF
-        val endColorGreen = colorEnd shr 8 and 0xFF
-        val endColorBlue = colorEnd and 0xFF
+        textView_endColorHex.text = data.endColorHex
+        imageView_endColor.setBackgroundColor(data.endColorRgb)
 
-        imageView_endColor.setBackgroundColor(
-            Color.rgb(
-                endColorRed,
-                endColorGreen,
-                endColorBlue
-            )
-        )
+        data.apply {
+            with (cardView_details) {
+                background = android.graphics.drawable.GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(data.startColorRgb, data.endColorRgb)
+                ).apply {
+                    this.cornerRadius = 20F
+                }
+                cardElevation = 20F
+                this.radius = 20F
+                setContentPadding(5, 5, 5, 5)
+            }
+        }
+        quickSQL.close()
+    }
+
+    private fun initialize() {
+        initializeSwitches()
+        initializeDetailsCard()
     }
 
     private fun bindListeners() {
@@ -160,14 +147,12 @@ class MainActivity : Activity() {
                 updateAutoClose(switch_autoClose.isChecked)
                 close()
             }
-            Toast.makeText(
-                this,
+            raiseShortToast(
                 when (switch_autoClose.isChecked) {
                     true -> "Dialog will be closed on selecting any option"
                     else -> "Username will not be closed until user select the close button"
-                },
-                Toast.LENGTH_SHORT
-            ).show()
+                }
+            )
         }
 
         switch_showDeviceName.setOnCheckedChangeListener { _, boolean ->
@@ -179,14 +164,12 @@ class MainActivity : Activity() {
                 true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
                 else -> resources.getString(R.string.device_name)
             }
-            Toast.makeText(
-                this,
+            raiseShortToast(
                 when (switch_showDeviceName.isChecked) {
                     true -> "Device Name will be shown"
                     else -> "Device Name will not be shown"
-                },
-                Toast.LENGTH_SHORT
-            ).show()
+                }
+            )
         }
 
         switch_showUsername.setOnCheckedChangeListener { _, boolean ->
@@ -194,14 +177,12 @@ class MainActivity : Activity() {
                 updateShowUsername(boolean)
                 close()
             }
-            Toast.makeText(
-                this,
+            raiseShortToast(
                 when (boolean) {
                     true -> "Username will be shown"
                     else -> "Username will not be shown"
-                },
-                Toast.LENGTH_SHORT
-            ).show()
+                }
+            )
 
             var username = resources.getString(R.string.username)
             textView_userName.text = when (boolean) {
@@ -254,10 +235,10 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-                    username      // Show Empty String when permission to contacts is not given
+                    "$username's"   // Show Empty String when permission to contacts is not given
                 }
                 false -> {
-                    username      // Show Empty String when switch is unchecked
+                    username    // Show Empty String when switch is unchecked
                 }
             }
         }
@@ -270,7 +251,7 @@ class MainActivity : Activity() {
             * updating gradient start color
             * */
             with(Dialog(this)) {
-                this.setContentView(R.layout.color_picker_dialog)
+                setContentView(R.layout.color_picker_dialog)
 
                 setTitle("Select Gradient Start Color")
 
@@ -286,6 +267,27 @@ class MainActivity : Activity() {
                     seekBar_greenComponent.progress,
                     seekBar_blueComponent.progress
                 ))
+
+                // setting the initial value of color components in the TextViews
+                textView_redComponent.text = String.format(
+                    "#%02X",
+                    seekBar_redComponent.progress
+                )
+                textView_greenComponent.text = String.format(
+                    "#%02X",
+                    seekBar_greenComponent.progress
+                )
+                textView_blueComponent.text = String.format(
+                    "#%02X",
+                    seekBar_blueComponent.progress
+                )
+                textView_hexCode.text = String.format(
+                    "#%02X%02X%02X",
+                    seekBar_redComponent.progress,
+                    seekBar_greenComponent.progress,
+                    seekBar_blueComponent.progress
+                )
+
                 /*
                 * Gradient Start RED Component: RED_START
                 * */
@@ -300,16 +302,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_redComponent.text = String.format(
+                            "#%02X",
+                            seekBar_redComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -317,8 +322,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_redComponent.text = String.format(
+                            "#%02X",
+                            seekBar_redComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -343,16 +352,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_greenComponent.text = String.format(
+                            "#%02X",
+                            seekBar_greenComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -360,8 +372,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_greenComponent.text = String.format(
+                            "#%02X",
+                            seekBar_greenComponent.progress
+                        ).toUpperCase()
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -386,16 +402,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_blueComponent.text = String.format(
+                            "#%02X",
+                            seekBar_blueComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -403,8 +422,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_blueComponent.text = String.format(
+                            "#%02X",
+                            seekBar_blueComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -421,7 +444,7 @@ class MainActivity : Activity() {
 
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
-                        updateGradientStartColor(textView_hexCode.text.subSequence(1, 7).toString().toUpperCase())
+                        updateGradientStartColor(textView_hexCode.text)
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
                         this@MainActivity.textView_startColorHex.text = hexCode
                         this@MainActivity.imageView_startColor.setBackgroundColor(Color.rgb(
@@ -429,6 +452,7 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        initializeDetailsCard()
                         close()
                     }
                     dismiss()
@@ -448,7 +472,7 @@ class MainActivity : Activity() {
             * updating gradient start color
             * */
             with(Dialog(this)) {
-                this.setContentView(R.layout.color_picker_dialog)
+                setContentView(R.layout.color_picker_dialog)
 
                 setTitle("Select Gradient End Color")
 
@@ -458,6 +482,26 @@ class MainActivity : Activity() {
                 seekBar_redComponent.progress = Integer.parseInt(data.endColor, 16) shr 16 and 0xFF
                 seekBar_greenComponent.progress = Integer.parseInt(data.endColor, 16) shr 8 and 0xFF
                 seekBar_blueComponent.progress = Integer.parseInt(data.endColor, 16) and 0xFF
+
+                // setting the initial value of color components in the TextViews
+                textView_redComponent.text = String.format(
+                    "#%02X",
+                    seekBar_redComponent.progress
+                )
+                textView_greenComponent.text = String.format(
+                    "#%02X",
+                    seekBar_greenComponent.progress
+                )
+                textView_blueComponent.text = String.format(
+                    "#%02X",
+                    seekBar_blueComponent.progress
+                )
+                textView_hexCode.text = String.format(
+                    "#%02X%02X%02X",
+                    seekBar_redComponent.progress,
+                    seekBar_greenComponent.progress,
+                    seekBar_blueComponent.progress
+                )
 
                 cardView_finalColor.setCardBackgroundColor(Color.rgb(
                     seekBar_redComponent.progress,
@@ -478,16 +522,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_redComponent.text = String.format(
+                            "#%02X",
+                            seekBar_redComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -495,8 +542,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_redComponent.text = String.format(
+                            "#%02X",
+                            seekBar_redComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -521,16 +572,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_greenComponent.text = String.format(
+                            "#%02X",
+                            seekBar_greenComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -538,8 +592,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_greenComponent.text = String.format(
+                            "#%02X",
+                            seekBar_greenComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -564,16 +622,19 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_blueComponent.text = String.format(
+                            "#%02X",
+                            seekBar_blueComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         )
                     }
 
-                    override fun onStartTrackingTouch(p0: SeekBar?) {
-                    }
+                    override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
                     override fun onStopTrackingTouch(p0: SeekBar?) {
                         cardView_finalColor.setCardBackgroundColor(Color.rgb(
@@ -581,8 +642,12 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        textView_blueComponent.text = String.format(
+                            "#%02X",
+                            seekBar_blueComponent.progress
+                        )
                         textView_hexCode.text = String.format(
-                            "#%02x%02x%02x",
+                            "#%02X%02X%02X",
                             seekBar_redComponent.progress,
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
@@ -599,7 +664,7 @@ class MainActivity : Activity() {
 
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
-                        updateGradientEndColor(textView_hexCode.text.subSequence(1, 7).toString().toUpperCase())
+                        updateGradientEndColor(textView_hexCode.text)
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
                         this@MainActivity.textView_endColorHex.text = hexCode
                         this@MainActivity.imageView_endColor.setBackgroundColor(Color.rgb(
@@ -607,6 +672,7 @@ class MainActivity : Activity() {
                             seekBar_greenComponent.progress,
                             seekBar_blueComponent.progress
                         ))
+                        initializeDetailsCard()
                         close()
                     }
                     dismiss()
@@ -618,4 +684,12 @@ class MainActivity : Activity() {
         * Gradient End Color: END
         * */
     }
+}
+
+private fun MainActivity.raiseLongToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+}
+
+private fun MainActivity.raiseShortToast(message: String) {
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

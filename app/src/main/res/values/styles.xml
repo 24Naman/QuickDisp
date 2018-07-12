@@ -3,12 +3,25 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Material.Light.LightStatusBar">
         <!-- Customize your theme here. -->
-        <item name="cardViewStyle">@style/CardView.Dark</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
-    <style name="cardViewStyle" parent="android:Theme.Material.Light.Dialog.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="cardViewStyle">@style/CardView.Dark</item>
+    <style name="AppTheme.SwitchStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:elevation">5dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:showText">true</item>
+        <item name="android:textOff">@string/switch_off</item>
+        <item name="android:textOn">@string/switch_on</item>
+        <item name="android:thumbTint">#FF0000</item>
+        <item name="android:trackTint">@color/colorOrange</item>
+    </style>
+
+    <style name="AppTheme.CardStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">20dp</item>
     </style>
 
 </resources>

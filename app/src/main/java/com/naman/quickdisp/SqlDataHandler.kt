@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.graphics.Color
 
 data class QuickSQLData(
     val startColor: String,
@@ -11,7 +12,25 @@ data class QuickSQLData(
     val autoCloseDialog: Boolean,
     val showUserNameOnDialog: Boolean,
     val showDeviceModelNumberOnDialog: Boolean
-)
+) {
+    private fun hexToRgb(color: Int): Int = Color.rgb(
+        color shr 16 and 0xFF,
+        color shr 8 and 0xFF,
+        color and 0xFF
+    )
+
+    val startColorHex: String
+        get() = "#$startColor"
+
+    val endColorHex: String
+        get() = "#$endColor"
+
+    val startColorRgb: Int
+        get() = hexToRgb(Integer.parseInt(startColor, 16))
+
+    val endColorRgb: Int
+        get() = hexToRgb(Integer.parseInt(endColor, 16))
+}
 
 class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", null, 1) {
 
@@ -25,7 +44,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
     private val showUserNameOnDialog = "showUserNameOnDialog"
     private val showDeviceModelNumberOnDialog = "showDeviceModelNumberOnDialog"
 
-    override fun onCreate(p0: SQLiteDatabase?) {
+    override fun onCreate(sqLiteDatabase: SQLiteDatabase?) {
 
         val createTableStatement = """
             create table $tableName (
@@ -38,9 +57,9 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             )
         """.trimIndent()
 
-        p0?.execSQL(createTableStatement)
+        sqLiteDatabase?.execSQL(createTableStatement)
 
-        p0?.insert(
+        sqLiteDatabase?.insert(
             tableName,
             null,
             ContentValues().let {
@@ -79,11 +98,11 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                 else -> {
                     close()
                     return QuickSQLData(
-                        "FFFFFF",
-                        "FFFFFF",
-                        false,
-                        false,
-                        false
+                        startColor = "FFFFFF",
+                        endColor = "FFFFFF",
+                        autoCloseDialog = false,
+                        showUserNameOnDialog = false,
+                        showDeviceModelNumberOnDialog = false
                     )
                 }
             }
@@ -108,12 +127,12 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         }
     }
 
-    fun updateGradientStartColor(hexCode: String) {
+    fun updateGradientStartColor(hexCode: CharSequence) {
         with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(startColor, hexCode.toUpperCase())
+                    put(startColor, hexCode.toString().subSequence(1, 7).toString().toUpperCase())
                 },
                 null,
                 null
@@ -122,12 +141,12 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         }
     }
 
-    fun updateGradientEndColor(hexCode: String) {
+    fun updateGradientEndColor(hexCode: CharSequence) {
         with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(endColor, hexCode.toUpperCase())
+                    put(endColor, hexCode.toString().subSequence(1, 7).toString().toUpperCase())
                 },
                 null,
                 null
@@ -179,16 +198,13 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
     }
 }
 
-private fun Boolean.oneOrZero(): Int {
-    return when(this) {
-        true -> 1
-        else -> 0
-    }
+private fun Boolean.oneOrZero(): Int = when(this) {
+    true -> 1
+    else -> 0
 }
 
-private fun Int.trueOrFalse(): Boolean {
-    return when(this) {
-        1 -> true
-        else -> false
-    }
+private fun Int.trueOrFalse(): Boolean = when(this) {
+    1 -> true
+    else -> false
 }
+

@@ -5,66 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#ff2200"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="20dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#cdbbff00"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgView_appIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/app_icon"
-                android:cropToPadding="false"
-                android:elevation="5dp"
-                android:paddingEnd="5dp"
-                android:paddingStart="5dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView_userName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/alex_brush"
-                    android:gravity="center"
-                    android:text="@string/username"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView_deviceName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/alex_brush"
-                    android:gravity="center"
-                    android:text="@string/device_name"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+    <include
+        layout="@layout/quick_display_title"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -103,60 +47,114 @@
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
-                    <android.support.v7.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardBackgroundColor="@color/ic_launcher_background"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="50dp">
+                        android:orientation="vertical">
 
-                        <LinearLayout
+                        <android.support.v7.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
+                            android:layout_margin="10dp"
+                            app:cardBackgroundColor="@color/ic_launcher_background"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="50dp">
 
-                            <Switch
-                                android:id="@+id/switch_showUsername"
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="5dp"
-                                android:padding="10dp"
-                                android:showText="true"
-                                android:text="@string/show_username"
-                                android:textOff="@string/switch_off"
-                                android:textOn="@string/switch_on"
-                                android:thumbTint="#FF0000"
-                                android:trackTint="@color/colorOrange" />
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                            <Switch
-                                android:id="@+id/switch_showDeviceName"
+                                <Switch
+                                    android:id="@+id/switch_showUsername"
+                                    style="@style/AppTheme.SwitchStyle"
+                                    android:layout_width="match_parent"
+                                    android:text="@string/show_username" />
+
+                                <TextView
+                                    android:id="@+id/textView_showUsernameInfo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:drawableStart="@android:drawable/ic_menu_info_details"
+                                    android:drawableTint="#0000FF"
+                                    android:drawableTintMode="src_atop"
+                                    android:text="@string/show_username_from_contacts"
+                                    android:textAlignment="center"
+                                    android:textAllCaps="true"
+                                    android:textStyle="bold|italic" />
+                            </LinearLayout>
+
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:padding="20dp"
+                            app:cardBackgroundColor="@color/ic_launcher_background"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="50dp">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="5dp"
-                                android:padding="10dp"
-                                android:showText="true"
-                                android:text="@string/show_device_name"
-                                android:textOff="@string/switch_off"
-                                android:textOn="@string/switch_on"
-                                android:thumbTint="#FF0000"
-                                android:trackTint="@color/colorOrange" />
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                            <Switch
-                                android:id="@+id/switch_autoClose"
+                                <Switch
+                                    android:id="@+id/switch_showDeviceName"
+                                    style="@style/AppTheme.SwitchStyle"
+                                    android:text="@string/show_device_name" />
+
+                                <TextView
+                                    android:id="@+id/textView_showDeviceInfo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:drawableStart="@android:drawable/ic_menu_info_details"
+                                    android:drawableTint="#0000FF"
+                                    android:drawableTintMode="src_atop"
+                                    android:text="@string/show_name_from_device_info"
+                                    android:textAlignment="center"
+                                    android:textAllCaps="true"
+                                    android:textStyle="bold|italic" />
+                            </LinearLayout>
+                        </android.support.v7.widget.CardView>
+
+                        <android.support.v7.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_margin="10dp"
+                            android:padding="20dp"
+                            app:cardBackgroundColor="@color/ic_launcher_background"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="50dp">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:elevation="5dp"
-                                android:padding="10dp"
-                                android:showText="true"
-                                android:splitTrack="false"
-                                android:text="@string/auto_close_dialog"
-                                android:textOff="@string/switch_off"
-                                android:textOn="@string/switch_on"
-                                android:thumbTint="#FF0000"
-                                android:trackTint="@color/colorOrange" />
-                        </LinearLayout>
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
 
-                    </android.support.v7.widget.CardView>
+                                <Switch
+                                    android:id="@+id/switch_autoClose"
+                                    style="@style/AppTheme.SwitchStyle"
+                                    android:layout_width="match_parent"
+                                    android:text="@string/auto_close_dialog" />
+
+                                <TextView
+                                    android:id="@+id/textView_autoCloseInfo"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:drawableStart="@android:drawable/ic_menu_info_details"
+                                    android:drawableTint="#0000FF"
+                                    android:text="@string/close_dialog_on_any_option"
+                                    android:textAlignment="center"
+                                    android:textAllCaps="true"
+                                    android:textStyle="bold|italic" />
+                            </LinearLayout>
+
+                        </android.support.v7.widget.CardView>
+
+                    </LinearLayout>
+
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 
@@ -317,8 +315,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:textColor="@color/metallicRed"
-                                    android:text="@string/white_color_hex" />
+                                    android:text="@string/white_color_hex"
+                                    android:textColor="@color/metallicRed" />
 
                                 <Button
                                     android:id="@+id/button_changeEndColor"
