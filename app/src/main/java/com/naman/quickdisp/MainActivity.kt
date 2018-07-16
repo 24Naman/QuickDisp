@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.color_picker_dialog.*
 import kotlinx.android.synthetic.main.quick_display_title.*
 
-
 class MainActivity : Activity() {
 
     private lateinit var quickSQL: QuickSQL
