@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_format_color_reset_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/navigation/ic_check_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -34,9 +34,9 @@
                                   <option name="values">
                                     <map>
                                       <entry key="imageAsset" value="C:\Users\naman\Downloads\default.png" />
-                                      <entry key="outputName" value="ic_reset_settings" />
+                                      <entry key="outputName" value="ic_ok" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ff0000" />
+                                      <entry key="themeColor" value="00ff00" />
                                     </map>
                                   </option>
                                 </PersistentState>

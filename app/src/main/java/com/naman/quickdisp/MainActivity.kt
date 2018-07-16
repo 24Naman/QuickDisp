@@ -5,11 +5,15 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.CursorIndexOutOfBoundsException
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.SeekBar
@@ -18,14 +22,27 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.color_picker_dialog.*
 import kotlinx.android.synthetic.main.quick_display_title.*
 
+
 class MainActivity : Activity() {
 
     private lateinit var quickSQL: QuickSQL
     private lateinit var data: QuickSQLData
 
+    private fun settingPermission() {
+        when {
+            !Settings.System.canWrite(applicationContext) -> {
+                val intent =
+                    Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:$packageName"))
+                startActivityForResult(intent, 200)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        settingPermission()
 
         quickSQL = QuickSQL(this)
         data = quickSQL.getData()
@@ -198,7 +215,16 @@ class MainActivity : Activity() {
                                     null
                                 ).let {
                                     it.moveToFirst()
-                                    username = it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                                    username = try {
+                                        it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                                    } catch (e: CursorIndexOutOfBoundsException) {
+                                        Toast.makeText(
+                                            this@MainActivity,
+                                            "Username not available",
+                                            Toast.LENGTH_LONG
+                                        ).show()
+                                        "My"
+                                    }
                                 }
                             }
                         }

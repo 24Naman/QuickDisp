@@ -36,4 +36,9 @@
     <string name="thirty_seconds">Thirty Seconds</string>
     <string name="one_minute">One Minute</string>
     <string name="two_minutes">Two Minutes</string>
+    <string name="five_minutes">Five Minutes</string>
+    <string name="ten_minutes">Ten Minutes</string>
+    <string name="thirty_minutes">Thirty Minutes</string>
+    <string name="icon_for_current_settings">Icon for current settings</string>
+    <string name="auto_brightness">Auto Brightness </string>
 </resources>
