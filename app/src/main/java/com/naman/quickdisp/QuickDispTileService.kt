@@ -156,6 +156,12 @@ class QuickDispTileService : TileService() {
                         else -> 30000  // 30 Seconds
                     }
                 )
+                when (quickSQLData.autoCloseDialog) {
+                    true -> {
+                        dialogBackground.imageButton_cancel.performClick()
+                        return
+                    }
+                }
                 initDialog(dialogBackground)
             }
         }
