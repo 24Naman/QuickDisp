@@ -24,10 +24,13 @@ import kotlinx.android.synthetic.main.quick_display_title.*
 
 class MainActivity : Activity() {
 
-    private lateinit var quickSQL: QuickSQL
-    private lateinit var data: QuickSQLData
+    private lateinit var quickSQL: QuickSQL     // object of the SQLiteOpenHelper class
+    private lateinit var data: QuickSQLData     // object of the QuickSQLData, data class
 
     private fun settingPermission() {
+        /*
+        * Permission for changing device settings
+        * */
         when {
             !Settings.System.canWrite(applicationContext) -> {
                 val intent =
@@ -66,24 +69,24 @@ class MainActivity : Activity() {
         when (item?.itemId) {
             R.id.menuItem_resetButton -> {
                 AlertDialog.Builder(this@MainActivity).apply {
-                    this.setTitle("Reset App Settings")
-                    this.setMessage("This will change the preferences and color to the default " +
+                    setTitle("Reset App Settings")
+                    setMessage("This will change the preferences and color to the default " +
                             "setting permanently.")
-                    this.setIcon(
+                    setIcon(
                         resources.getDrawable(
                             R.drawable.ic_reset_settings,
                             context.theme
                         )
                     )
                     val createdDialog = create()
-                    this.setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
+                    setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
                         com.naman.quickdisp.QuickSQL(this@MainActivity).apply {
                             resetData()
                             close()
                         }
                         initialize()
                     }
-                    this.setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
+                    setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
                         createdDialog.dismiss()
                     }
                 }.show()
@@ -114,8 +117,12 @@ class MainActivity : Activity() {
     }
 
     private fun initializeSwitches() {
+        /*
+        * Initialize and change the state of switches on application run
+        * */
         quickSQL = QuickSQL(this)
         data = quickSQL.getData()
+
         // setting the state of switches
         data.apply {
             switch_showUsername.isChecked = showUserNameOnDialog
@@ -125,6 +132,9 @@ class MainActivity : Activity() {
     }
 
     private fun initializeDetailsCard() {
+        /*
+        * initialize the details on the title CardView
+        * */
         quickSQL = QuickSQL(this)
         data = quickSQL.getData()
 
@@ -158,9 +168,13 @@ class MainActivity : Activity() {
     }
 
     private fun bindListeners() {
+        /*
+        * Binding the listeners to the appropriate widgets
+        * */
+
         switch_autoClose.setOnClickListener {
             QuickSQL(this).apply {
-                updateAutoClose(switch_autoClose.isChecked)
+                dialogAutoClose = switch_autoClose.isChecked
                 close()
             }
             raiseShortToast(
@@ -173,7 +187,7 @@ class MainActivity : Activity() {
 
         switch_showDeviceName.setOnCheckedChangeListener { _, boolean ->
             QuickSQL(this).apply {
-                updateShowDeviceName(switch_showDeviceName.isChecked)
+                showDeviceName = switch_showDeviceName.isChecked
                 close()
             }
             textView_deviceName.text = when (boolean) {
@@ -190,7 +204,7 @@ class MainActivity : Activity() {
 
         switch_showUsername.setOnCheckedChangeListener { _, boolean ->
             QuickSQL(this).apply {
-                updateShowUsername(boolean)
+                showUsername = boolean
                 close()
             }
             raiseShortToast(
@@ -217,11 +231,7 @@ class MainActivity : Activity() {
                                     username = try {
                                         it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
                                     } catch (e: CursorIndexOutOfBoundsException) {
-                                        Toast.makeText(
-                                            this@MainActivity,
-                                            "Username not available",
-                                            Toast.LENGTH_LONG
-                                        ).show()
+                                        raiseLongToast("Username not available")
                                         "My"
                                     }
                                 }
@@ -236,22 +246,26 @@ class MainActivity : Activity() {
                                     )
                                 }
                                 true -> {
-                                    // Dialog for requesting permission
+                                    /**
+                                    * Dialog for requesting permission
+                                    * It will be shown in case of user has denied the READ_CONTACTS
+                                     * permission permanently and has request to show the user name in the dialog
+                                    */
                                     AlertDialog.Builder(this@MainActivity).apply {
-                                        this.setTitle("Permission to use Contacts?")
-                                        this.setIcon(
+                                        setTitle("Permission to use Contacts?")
+                                        setIcon(
                                             resources.getDrawable(
                                                 R.mipmap.ic_launcher,
                                                 context.theme
                                             )
                                         )
-                                        this.setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
+                                        setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
                                                 requestPermissions(
                                                     arrayOf(Manifest.permission.READ_CONTACTS),
                                                     1234
                                                 )
                                         }
-                                        this.setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
+                                        setNegativeButton(R.string.dialog_no) { _: DialogInterface, _: Int ->
                                                 this@MainActivity.switch_showUsername.isChecked = false
                                         }
                                         create()
@@ -469,7 +483,7 @@ class MainActivity : Activity() {
 
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
-                        updateGradientStartColor(textView_hexCode.text)
+                        gradientStartColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
                         this@MainActivity.textView_startColorHex.text = hexCode
                         this@MainActivity.imageView_startColor.setBackgroundColor(Color.rgb(
@@ -689,7 +703,7 @@ class MainActivity : Activity() {
 
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
-                        updateGradientEndColor(textView_hexCode.text)
+                        gradientEndColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
                         this@MainActivity.textView_endColorHex.text = hexCode
                         this@MainActivity.imageView_endColor.setBackgroundColor(Color.rgb(
@@ -712,9 +726,15 @@ class MainActivity : Activity() {
 }
 
 private fun MainActivity.raiseLongToast(message: String) {
+    /**
+    * Extension function on MainActivity to show LENGTH_LONG toast
+    * */
     Toast.makeText(this, message, Toast.LENGTH_LONG).show()
 }
 
 private fun MainActivity.raiseShortToast(message: String) {
+    /**
+     * Extension function on MainActivity to show LENGTH_SHORT toast
+     * */
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 }

@@ -145,15 +145,17 @@ class QuickDispTileService : TileService() {
                 Settings.System.putInt(
                     contentResolver,
                     Settings.System.SCREEN_OFF_TIMEOUT,
-                    when (p0) {
-                        dialogBackground.imageButton_fifteenSeconds -> 15000    // 15 Seconds
-                        dialogBackground.imageButton_thirtySeconds -> 30000  // 30 Seconds
-                        dialogBackground.imageButton_oneMinute -> 60000 // 1 Minute
-                        dialogBackground.imageButton_twoMinutes -> 120000   // 2 Minutes
-                        dialogBackground.imageButton_fiveMinutes -> 300000   // 5 Minutes
-                        dialogBackground.imageButton_tenMinutes -> 600000   // 10 Minutes
-                        dialogBackground.imageButton_thirtyMinutes -> 1800000   // 30 Minutes
-                        else -> 30000  // 30 Seconds
+                    dialogBackground.let {
+                        when (p0) {
+                            it.imageButton_fifteenSeconds -> 15000    // 15 Seconds
+                            it.imageButton_thirtySeconds -> 30000  // 30 Seconds
+                            it.imageButton_oneMinute -> 60000 // 1 Minute
+                            it.imageButton_twoMinutes -> 120000   // 2 Minutes
+                            it.imageButton_fiveMinutes -> 300000   // 5 Minutes
+                            it.imageButton_tenMinutes -> 600000   // 10 Minutes
+                            it.imageButton_thirtyMinutes -> 1800000   // 30 Minutes
+                            else -> 30000  // 30 Seconds
+                        }
                     }
                 )
                 when (quickSQLData.autoCloseDialog) {
@@ -173,30 +175,34 @@ class QuickDispTileService : TileService() {
                 initDialog(dialogBackground)
                 setView(dialogBackground)
 
-                dialogBackground.imageButton_thirtyMinutes.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_fifteenSeconds.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_thirtySeconds.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_oneMinute.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_twoMinutes.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_fiveMinutes.setOnClickListener(ScreenTimeoutListener())
-                dialogBackground.imageButton_tenMinutes.setOnClickListener(ScreenTimeoutListener())
+                var createdDialog: AlertDialog? = null
 
-                dialogBackground.switch_autoBright.setOnCheckedChangeListener { _, b ->
-                    Settings.System.putInt(
-                        contentResolver,
-                        Settings.System.SCREEN_BRIGHTNESS_MODE,
-                        when (b) {
-                            true -> Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
-                            else -> Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
-                        }
-                    )
-                    initDialog(dialogBackground)
-                }
+                dialogBackground.run {
+                    imageButton_thirtyMinutes.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_fifteenSeconds.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_thirtySeconds.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_oneMinute.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_twoMinutes.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_fiveMinutes.setOnClickListener(ScreenTimeoutListener())
+                    imageButton_tenMinutes.setOnClickListener(ScreenTimeoutListener())
 
-                val createdDialog = create()
+                    switch_autoBright.setOnCheckedChangeListener { _, b ->
+                        Settings.System.putInt(
+                            contentResolver,
+                            Settings.System.SCREEN_BRIGHTNESS_MODE,
+                            when (b) {
+                                true -> Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC
+                                else -> Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL
+                            }
+                        )
+                        initDialog(this)
+                    }
 
-                dialogBackground.imageButton_cancel.setOnClickListener {
-                    createdDialog.dismiss()
+                    createdDialog = create()
+
+                    imageButton_cancel.setOnClickListener {
+                        (createdDialog as AlertDialog).dismiss()
+                    }
                 }
 
                 createdDialog
@@ -249,30 +255,34 @@ class QuickDispTileService : TileService() {
         // setting up the dialog
         when (screenDetails.second) {
             "A" -> {
-                dialogBackground.imageButton_fifteenSeconds.setImageResource(R.drawable.auto_fifteen_seconds)
-                dialogBackground.imageButton_thirtySeconds.setImageResource(R.drawable.auto_thirty_seconds)
-                dialogBackground.imageButton_oneMinute.setImageResource(R.drawable.auto_one_minute)
-                dialogBackground.imageButton_twoMinutes.setImageResource(R.drawable.auto_two_minutes)
-                dialogBackground.imageButton_fiveMinutes.setImageResource(R.drawable.auto_five_minutes)
-                dialogBackground.imageButton_tenMinutes.setImageResource(R.drawable.auto_ten_minutes)
-                dialogBackground.imageButton_thirtyMinutes.setImageResource(R.drawable.auto_thirty_minutes)
+                dialogBackground.apply {
+                    imageButton_fifteenSeconds.setImageResource(R.drawable.auto_fifteen_seconds)
+                    imageButton_thirtySeconds.setImageResource(R.drawable.auto_thirty_seconds)
+                    imageButton_oneMinute.setImageResource(R.drawable.auto_one_minute)
+                    imageButton_twoMinutes.setImageResource(R.drawable.auto_two_minutes)
+                    imageButton_fiveMinutes.setImageResource(R.drawable.auto_five_minutes)
+                    imageButton_tenMinutes.setImageResource(R.drawable.auto_ten_minutes)
+                    imageButton_thirtyMinutes.setImageResource(R.drawable.auto_thirty_minutes)
 
-                dialogBackground.switch_autoBright.isChecked = true
+                    switch_autoBright.isChecked = true
 
-                dialogBackground.imageView_currentSetting.setImageResource(screenDetails.third)
+                    imageView_currentSetting.setImageResource(screenDetails.third)
+                }
             }
             "M" -> {
-                dialogBackground.imageButton_fifteenSeconds.setImageResource(R.drawable.manual_fifteen_seconds)
-                dialogBackground.imageButton_thirtySeconds.setImageResource(R.drawable.manual_thirty_seconds)
-                dialogBackground.imageButton_oneMinute.setImageResource(R.drawable.manual_one_minute)
-                dialogBackground.imageButton_twoMinutes.setImageResource(R.drawable.manual_two_minutes)
-                dialogBackground.imageButton_fiveMinutes.setImageResource(R.drawable.manual_five_minutes)
-                dialogBackground.imageButton_tenMinutes.setImageResource(R.drawable.manual_ten_minutes)
-                dialogBackground.imageButton_thirtyMinutes.setImageResource(R.drawable.manual_thirty_minutes)
+                dialogBackground.apply {
+                    imageButton_fifteenSeconds.setImageResource(R.drawable.manual_fifteen_seconds)
+                    imageButton_thirtySeconds.setImageResource(R.drawable.manual_thirty_seconds)
+                    imageButton_oneMinute.setImageResource(R.drawable.manual_one_minute)
+                    imageButton_twoMinutes.setImageResource(R.drawable.manual_two_minutes)
+                    imageButton_fiveMinutes.setImageResource(R.drawable.manual_five_minutes)
+                    imageButton_tenMinutes.setImageResource(R.drawable.manual_ten_minutes)
+                    imageButton_thirtyMinutes.setImageResource(R.drawable.manual_thirty_minutes)
 
-                dialogBackground.switch_autoBright.isChecked = false
+                    switch_autoBright.isChecked = false
 
-                dialogBackground.imageView_currentSetting.setImageResource(screenDetails.third)
+                    imageView_currentSetting.setImageResource(screenDetails.third)
+                }
             }
         }
     }

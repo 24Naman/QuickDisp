@@ -36,7 +36,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
 
     private var tableName = "quicksql"
 
-    // column name
+    // column names
     private val startColor = "startColor"
     private val endColor = "endColor"
     private val firstRun = "firstRun"
@@ -62,14 +62,13 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         sqLiteDatabase?.insert(
             tableName,
             null,
-            ContentValues().let {
-                it.put(startColor, "FFFFFF")
-                it.put(endColor, "FFFFFF")
-                it.put(firstRun, true.oneOrZero())
-                it.put(autoCloseDialog, false.oneOrZero())
-                it.put(showUserNameOnDialog, false.oneOrZero())
-                it.put(showDeviceModelNumberOnDialog, false.oneOrZero())
-                it
+            ContentValues().apply {
+                put(startColor, "FFFFFF")
+                put(endColor, "FFFFFF")
+                put(firstRun, true.oneOrZero())
+                put(autoCloseDialog, false.oneOrZero())
+                put(showUserNameOnDialog, false.oneOrZero())
+                put(showDeviceModelNumberOnDialog, false.oneOrZero())
             }
         )
     }
@@ -81,7 +80,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             "select * from ${this@QuickSQL.tableName};",
             arrayOf()
         )
-        with(cursor) {
+        return with(cursor) {
             when {
                 count > 0 -> {
                     moveToFirst()
@@ -93,11 +92,11 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                         getInt(getColumnIndex(showDeviceModelNumberOnDialog)).trueOrFalse()
                     )
                     close()
-                    return quickSQLData
+                    quickSQLData
                 }
                 else -> {
                     close()
-                    return QuickSQLData(
+                    QuickSQLData(
                         startColor = "FFFFFF",
                         endColor = "FFFFFF",
                         autoCloseDialog = false,
@@ -127,75 +126,70 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         }
     }
 
-    fun updateGradientStartColor(hexCode: CharSequence) {
-        with(writableDatabase) {
+    var gradientStartColor: String =""
+        set(value) = with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(startColor, hexCode.toString().subSequence(1, 7).toString().toUpperCase())
+                    put(startColor, value.subSequence(1, 7).toString().toUpperCase())
                 },
                 null,
                 null
             )
             close()
         }
-    }
 
-    fun updateGradientEndColor(hexCode: CharSequence) {
-        with(writableDatabase) {
+    var gradientEndColor: String =""
+        set(value) = with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(endColor, hexCode.toString().subSequence(1, 7).toString().toUpperCase())
+                    put(endColor, value.subSequence(1, 7).toString().toUpperCase())
                 },
                 null,
                 null
             )
             close()
         }
-    }
 
-    fun updateShowUsername(state: Boolean) {
-        with(writableDatabase) {
+    var showUsername: Boolean = false
+        set(value) = with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(showUserNameOnDialog, state.oneOrZero())
+                    put(showUserNameOnDialog, value.oneOrZero())
                 },
                 null,
                 null
             )
             close()
         }
-    }
 
-    fun updateShowDeviceName(state: Boolean) {
-        with(writableDatabase) {
+    var showDeviceName: Boolean = false
+        set(value) = with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(showDeviceModelNumberOnDialog, state.oneOrZero())
+                    put(showDeviceModelNumberOnDialog, value.oneOrZero())
                 },
                 null,
                 null
             )
             close()
         }
-    }
 
-    fun updateAutoClose(state: Boolean) {
-        with(writableDatabase) {
+    var dialogAutoClose: Boolean = false
+        set(value) = with(writableDatabase) {
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(autoCloseDialog, state.oneOrZero())
+                    put(autoCloseDialog, value.oneOrZero())
                 },
                 null,
                 null
             )
             close()
         }
-    }
 }
 
 private fun Boolean.oneOrZero(): Int = when(this) {
