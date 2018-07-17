@@ -4,7 +4,7 @@ Quick Setting tile for changing display settings
 <h1>Application Screenshots</h1>
 
 <h2>I</h2> <br>
-<img src=https://github.com/24Naman/QuickDisp/blob/master/screenshots/Screenshot_20180717-152651.png alt="Screenshots" /> <br>
+<img src=https://github.com/24Naman/QuickDisp/blob/master/screenshots/Screenshot_20180717-152651.png alt="Screenshots" style="width:500px;height:600px;"/> <br>
 
 <h2>II</h2> <br>
 <img src=https://github.com/24Naman/QuickDisp/blob/master/screenshots/Screenshot_20180717-152739.png alt="Screenshots" /> <br>
