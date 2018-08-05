@@ -190,15 +190,14 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             )
             close()
         }
-}
 
-private fun Boolean.oneOrZero(): Int = when(this) {
-    true -> 1
-    else -> 0
-}
+    private fun Boolean.oneOrZero(): Int = when(this) {
+        true -> 1
+        else -> 0
+    }
 
-private fun Int.trueOrFalse(): Boolean = when(this) {
-    1 -> true
-    else -> false
+    private fun Int.trueOrFalse(): Boolean = when(this) {
+        1 -> true
+        else -> false
+    }
 }
-
