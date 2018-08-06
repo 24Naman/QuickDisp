@@ -33,8 +33,10 @@ class MainActivity : Activity() {
         * */
         when {
             !Settings.System.canWrite(applicationContext) -> {
-                val intent =
-                    Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:$packageName"))
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                    Uri.parse("package:$packageName")
+                )
                 startActivityForResult(intent, 200)
             }
         }
@@ -477,11 +479,11 @@ class MainActivity : Activity() {
                 * Gradient Start BLUE Component: BLUE_END
                 * */
 
-                button_colorPickerCancel.setOnClickListener {
+                button_colorPickerCancel.setOnClickListener { _ ->
                     dismiss()
                 }
 
-                button_colorPickerOk.setOnClickListener {
+                button_colorPickerOk.setOnClickListener { _ ->
                     with(QuickSQL(this@MainActivity)) {
                         gradientStartColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
@@ -697,11 +699,11 @@ class MainActivity : Activity() {
                 * Gradient Start BLUE Component: BLUE_END
                 * */
 
-                button_colorPickerCancel.setOnClickListener {
+                button_colorPickerCancel.setOnClickListener { _ ->
                     dismiss()
                 }
 
-                button_colorPickerOk.setOnClickListener {
+                button_colorPickerOk.setOnClickListener { _ ->
                     with(QuickSQL(this@MainActivity)) {
                         gradientEndColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
