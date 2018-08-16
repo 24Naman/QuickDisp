@@ -84,11 +84,11 @@ class QuickDispTileService : TileService() {
                             null,
                             null
                         ).let {
-                            it.moveToFirst()
-                            it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                            it?.moveToFirst()
+                            it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
                         }
                     } catch (e: CursorIndexOutOfBoundsException) {
-                        "My"
+                        resources.getString(R.string.username)
                     }
                 }
                 else -> {

@@ -32,8 +32,9 @@ data class QuickSQLData(
         get() = hexToRgb(Integer.parseInt(endColor, 16))
 }
 
-class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", null, 1) {
+private const val whiteColor = "FFFFFF"
 
+class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", null, 1) {
     private var tableName = "quicksql"
 
     // column names
@@ -63,8 +64,8 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             tableName,
             null,
             ContentValues().apply {
-                put(startColor, "FFFFFF")
-                put(endColor, "FFFFFF")
+                put(startColor, whiteColor)
+                put(endColor, whiteColor)
                 put(firstRun, true.oneOrZero())
                 put(autoCloseDialog, false.oneOrZero())
                 put(showUserNameOnDialog, false.oneOrZero())
@@ -97,8 +98,8 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                 else -> {
                     close()
                     QuickSQLData(
-                        startColor = "FFFFFF",
-                        endColor = "FFFFFF",
+                        startColor = whiteColor,
+                        endColor = whiteColor,
                         autoCloseDialog = false,
                         showUserNameOnDialog = false,
                         showDeviceModelNumberOnDialog = false
@@ -113,8 +114,8 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
             this.update(
                 tableName,
                 ContentValues().apply {
-                    put(startColor, "FFFFFF")
-                    put(endColor, "FFFFFF")
+                    put(startColor, whiteColor)
+                    put(endColor, whiteColor)
                     put(autoCloseDialog, false.oneOrZero())
                     put(showUserNameOnDialog, false.oneOrZero())
                     put(showDeviceModelNumberOnDialog, false.oneOrZero())
