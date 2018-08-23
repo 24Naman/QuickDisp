@@ -99,24 +99,25 @@ class MainActivity : Activity() {
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
-        permissions: Array<out String>?,
-        grantResults: IntArray?
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         when (requestCode) {
-            1234 -> when (grantResults?.get(0)) {
+            1234 -> when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> {
-                    raiseLongToast("${permissions?.get(0)} Granted")
+                    raiseLongToast("${permissions[0]} Granted")
                     switch_showUsername.isChecked = true
                 }
                 else -> {
-                    raiseLongToast("${permissions?.get(0)} Not Granted")
+                    raiseLongToast("${permissions[0]} Not Granted")
                     switch_showUsername.isChecked = false
                 }
             }
         }
     }
+
 
     private fun initializeSwitches() {
         /*
@@ -229,9 +230,9 @@ class MainActivity : Activity() {
                                     null,
                                     null
                                 ).let {
-                                    it.moveToFirst()
+                                    it?.moveToFirst()
                                     username = try {
-                                        it.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                                        it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME)) ?: "My"
                                     } catch (e: CursorIndexOutOfBoundsException) {
                                         raiseLongToast("Username not available")
                                         "My"
