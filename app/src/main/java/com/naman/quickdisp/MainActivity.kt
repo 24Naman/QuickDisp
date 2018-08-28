@@ -194,7 +194,10 @@ class MainActivity : Activity() {
                 close()
             }
             textView_deviceName.text = when (boolean) {
-                true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
+                true -> when (android.os.Build.MODEL.startsWith(android.os.Build.BRAND)) {
+                    true -> android.os.Build.MODEL
+                    else -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
+                }
                 else -> resources.getString(R.string.device_name)
             }
             raiseShortToast(
@@ -277,10 +280,10 @@ class MainActivity : Activity() {
                             }
                         }
                     }
-                    "$username's"   // Show Empty String when permission to contacts is not given
+                    username
                 }
                 false -> {
-                    username    // Show Empty String when switch is unchecked
+                    username
                 }
             }
         }

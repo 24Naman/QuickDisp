@@ -85,7 +85,7 @@ class QuickDispTileService : TileService() {
                             null
                         ).let {
                             it?.moveToFirst()
-                            it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))
+                            "${it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))}'s"
                         }
                     } catch (e: CursorIndexOutOfBoundsException) {
                         resources.getString(R.string.username)
@@ -97,7 +97,10 @@ class QuickDispTileService : TileService() {
             }
 
             titleBackground.textView_deviceName.text = when (quickSQLData.showDeviceModelNumberOnDialog) {
-                true -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
+                true -> when (android.os.Build.MODEL.startsWith(android.os.Build.BRAND)) {
+                    true -> android.os.Build.MODEL
+                    else -> "${android.os.Build.BRAND} ${android.os.Build.MODEL}"
+                }
                 else -> resources.getString(R.string.device_name)
             }
         }
