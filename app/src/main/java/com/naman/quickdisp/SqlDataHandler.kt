@@ -48,7 +48,6 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
     // column names
     private val startColor = "startColor"
     private val endColor = "endColor"
-    private val firstRun = "firstRun"
     private val autoCloseDialog = "autoCloseDialog"
     private val showUserNameOnDialog = "showUserNameOnDialog"
     private val showDeviceModelNumberOnDialog = "showDeviceModelNumberOnDialog"
@@ -78,7 +77,6 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                     put(bgColor, whiteColor)
                     put(startColor, whiteColor)
                     put(endColor, whiteColor)
-                    put(firstRun, true.oneOrZero())
                     put(autoCloseDialog, false.oneOrZero())
                     put(showUserNameOnDialog, false.oneOrZero())
                     put(showDeviceModelNumberOnDialog, false.oneOrZero())
