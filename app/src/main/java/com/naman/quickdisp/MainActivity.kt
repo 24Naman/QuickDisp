@@ -386,7 +386,7 @@ class MainActivity : Activity() {
                 temp
             }
 
-            with(ColorDialog(this, "Select Gradient End Color", color)) {
+            with(ColorDialog(this, "Select Dialog Background Color", color)) {
                 button_colorPickerCancel.setOnClickListener { _ ->
                     dismiss()
                 }
