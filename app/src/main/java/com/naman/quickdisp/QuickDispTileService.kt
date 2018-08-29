@@ -9,6 +9,7 @@ import android.provider.Settings
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.quick_display_contents.view.*
 import kotlinx.android.synthetic.main.quick_display_title.view.*
 
@@ -57,7 +58,9 @@ class QuickDispTileService : TileService() {
             this@QuickDispTileService,
             R.layout.quick_display_title,
             null
-        )
+        ).apply {
+            setBackgroundColor(quickSQLData.bgColorRgb)
+        }
 
         with(titleBackground.cardView_details) {
             // custom gradient colors
@@ -70,7 +73,7 @@ class QuickDispTileService : TileService() {
             ).apply {
                 this.cornerRadius = 20F
             }
-            cardElevation = 20F
+            cardElevation = 24F
             this.radius = 20F
             setContentPadding(5, 5, 5, 5)
 
@@ -109,7 +112,9 @@ class QuickDispTileService : TileService() {
             this@QuickDispTileService,
             R.layout.quick_display_contents,
             null
-        )
+        ).apply {
+            setBackgroundColor(quickSQLData.bgColorRgb)
+        }
 
         with(dialogBackground.cardView_dialogIcon) {
             // custom gradient colors
@@ -163,6 +168,23 @@ class QuickDispTileService : TileService() {
                 )
                 when (quickSQLData.autoCloseDialog) {
                     true -> {
+                        val timeout = getScreenTimeoutDetails().first
+                        val messagePart = when (timeout) {
+                            15, 30 -> // seconds
+                                "$timeout Seconds"
+                            else -> {
+                                "${timeout/60} " + when (timeout/60) {
+                                    1 -> "Minute"
+                                    else -> "Minutes"
+                                }
+                            }
+                        }
+                        Toast.makeText(
+                            this@QuickDispTileService,
+                            "Screen Timeout is set to $messagePart.",
+                            Toast.LENGTH_LONG
+                        ).show()
+
                         dialogBackground.imageButton_cancel.performClick()
                         return
                     }
@@ -190,6 +212,14 @@ class QuickDispTileService : TileService() {
                     imageButton_tenMinutes.setOnClickListener(ScreenTimeoutListener())
 
                     switch_autoBright.setOnCheckedChangeListener { _, b ->
+                        Toast.makeText(
+                            this@QuickDispTileService,
+                            "Adaptive Brightness:" + when (b) {
+                                true -> "On"
+                                else -> "Off"
+                            },
+                            Toast.LENGTH_LONG
+                        ).show()
                         Settings.System.putInt(
                             contentResolver,
                             Settings.System.SCREEN_BRIGHTNESS_MODE,

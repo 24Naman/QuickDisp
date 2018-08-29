@@ -41,4 +41,5 @@
     <string name="thirty_minutes">Thirty Minutes</string>
     <string name="icon_for_current_settings">Icon for current settings</string>
     <string name="auto_brightness">Auto Brightness </string>
+    <string name="dialog_bgColor_picker">Dialog Background Color</string>
 </resources>
