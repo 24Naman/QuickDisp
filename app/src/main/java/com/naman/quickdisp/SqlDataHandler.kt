@@ -62,7 +62,6 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                 $bgColor   string,
                 $startColor  string,
                 $endColor    string,
-                $firstRun   int,
                 $autoCloseDialog int,
                 $showUserNameOnDialog    int,
                 $showDeviceModelNumberOnDialog   int
@@ -76,6 +75,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                 tableName,
                 null,
                 ContentValues().apply {
+                    put(bgColor, whiteColor)
                     put(startColor, whiteColor)
                     put(endColor, whiteColor)
                     put(firstRun, true.oneOrZero())
