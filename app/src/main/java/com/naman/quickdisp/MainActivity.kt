@@ -461,9 +461,20 @@ class MainActivity : Activity() {
             val seekBar: SeekBar
         ) : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-                imageView.setBackgroundColor(Color.rgb(
-                    seekBar.progress, 0,0
-                ))
+                imageView.setBackgroundColor(
+                    when (seekBar) {
+                        seekBar_redComponent -> Color.rgb(
+                            seekBar.progress, 0,0
+                        )
+                        seekBar_greenComponent -> Color.rgb(
+                            0, seekBar.progress, 0
+                        )
+                        seekBar_blueComponent -> Color.rgb(
+                            0, 0, seekBar.progress
+                        )
+                        else -> Color.rgb(255, 255, 255)
+                    }
+                )
 
                 cardView_finalColor.setCardBackgroundColor(Color.rgb(
                     seekBar_redComponent.progress,
