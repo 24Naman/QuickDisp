@@ -130,8 +130,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
 
     fun resetData() {
         with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(bgColor, whiteColor)
                     put(startColor, whiteColor)
@@ -139,9 +138,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
                     put(autoCloseDialog, false.oneOrZero())
                     put(showUserNameOnDialog, false.oneOrZero())
                     put(showDeviceModelNumberOnDialog, false.oneOrZero())
-                },
-                null,
-                null
+                }
             )
             close()
         }
@@ -149,81 +146,67 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
 
     var dialogBgColor: String = ""
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(bgColor, value.subSequence(1, 7).toString().toUpperCase())
-                },
-                null,
-                null
+                }
             )
             close()
         }
 
     var gradientStartColor: String = ""
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(startColor, value.subSequence(1, 7).toString().toUpperCase())
-                },
-                null,
-                null
+                }
             )
             close()
         }
 
     var gradientEndColor: String = ""
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(endColor, value.subSequence(1, 7).toString().toUpperCase())
-                },
-                null,
-                null
+                }
             )
             close()
         }
 
     var showUsername: Boolean = false
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(showUserNameOnDialog, value.oneOrZero())
-                },
-                null,
-                null
+                }
             )
             close()
         }
 
     var showDeviceName: Boolean = false
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(showDeviceModelNumberOnDialog, value.oneOrZero())
-                },
-                null,
-                null
+                }
             )
             close()
         }
 
     var dialogAutoClose: Boolean = false
         set(value) = with(writableDatabase) {
-            this.update(
-                tableName,
+            updateAllRecords(
                 ContentValues().apply {
                     put(autoCloseDialog, value.oneOrZero())
-                },
-                null,
-                null
+                }
             )
             close()
         }
+
+    private fun SQLiteDatabase.updateAllRecords(data: ContentValues) {
+        this.update(tableName, data, null, null)
+    }
 
     private fun Boolean.oneOrZero(): Int = when(this) {
         true -> 1
