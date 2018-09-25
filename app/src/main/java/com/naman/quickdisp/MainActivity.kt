@@ -237,21 +237,23 @@ class MainActivity : Activity() {
                     when (checkSelfPermission(Manifest.permission.READ_CONTACTS)) {
                         PackageManager.PERMISSION_GRANTED -> {
                             with(contentResolver) {
-                                this.query(
+                                val queryCursor = query(
                                     ContactsContract.Profile.CONTENT_URI,
                                     null,
                                     null,
                                     null,
                                     null
-                                ).let {
-                                    it?.moveToFirst()
+                                )
+                                queryCursor.apply {
+                                    this?.moveToFirst()
                                     username = try {
-                                        it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME)) ?: getString(R.string.username)
+                                        this?.getString(this.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME)) ?: "My"
                                     } catch (e: CursorIndexOutOfBoundsException) {
                                         raiseLongToast("Username not available")
-                                        getString(R.string.username)
+                                        "My"
                                     }
                                 }
+                                queryCursor?.close()
                             }
                         }
                         PackageManager.PERMISSION_DENIED -> {
