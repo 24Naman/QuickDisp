@@ -29,21 +29,6 @@ class MainActivity : Activity() {
     private lateinit var quickSQL: QuickSQL     // object of the SQLiteOpenHelper class
     private lateinit var data: QuickSQLData     // object of the QuickSQLData, data class
 
-    private fun settingPermission() {
-        /*
-        * Permission for changing device settings
-        * */
-        when {
-            !Settings.System.canWrite(applicationContext) -> {
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
-                    Uri.parse("package:$packageName")
-                )
-                startActivityForResult(intent, 200)
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -84,7 +69,7 @@ class MainActivity : Activity() {
                     )
                     val createdDialog = create()
                     setPositiveButton(R.string.dialog_yes) { _: DialogInterface, _: Int ->
-                        com.naman.quickdisp.QuickSQL(this@MainActivity).apply {
+                        QuickSQL(this@MainActivity).apply {
                             resetData()
                             close()
                         }
@@ -109,17 +94,31 @@ class MainActivity : Activity() {
         when (requestCode) {
             1234 -> when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> {
-                    raiseLongToast("${permissions[0]} Granted")
+                    raiseLongToast("Permission ${permissions[0]} Granted")
                     switch_showUsername.isChecked = true
                 }
                 else -> {
-                    raiseLongToast("${permissions[0]} Not Granted")
+                    raiseLongToast("Permission ${permissions[0]} Not Granted")
                     switch_showUsername.isChecked = false
                 }
             }
         }
     }
 
+    private fun settingPermission() {
+        /*
+        * Permission for changing device settings
+        * */
+        when {
+            !Settings.System.canWrite(applicationContext) -> {
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_WRITE_SETTINGS,
+                    Uri.parse("package:$packageName")
+                )
+                startActivityForResult(intent, 200)
+            }
+        }
+    }
 
     private fun initializeSwitches() {
         /*
@@ -161,14 +160,14 @@ class MainActivity : Activity() {
                 imageView_bgColor.setBackgroundColor(bgColorRgb)
 
                 with (cardView_details) {
-                    background = android.graphics.drawable.GradientDrawable(
+                    background = GradientDrawable(
                         GradientDrawable.Orientation.TL_BR,
                         intArrayOf(startColorRgb, endColorRgb)
                     ).apply {
-                        this.cornerRadius = 20F
+                        cornerRadius = 20F
                     }
                     cardElevation = 20F
-                    this.radius = 20F
+                    radius = 20F
                     setContentPadding(5, 5, 5, 5)
                 }
             }
@@ -315,11 +314,11 @@ class MainActivity : Activity() {
             }
 
             with(ColorDialog(this, "Select Gradient Start Color", color)) {
-                button_colorPickerCancel.setOnClickListener { _ ->
+                button_colorPickerCancel.setOnClickListener {
                     dismiss()
                 }
 
-                button_colorPickerOk.setOnClickListener { _ ->
+                button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         gradientStartColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
@@ -352,11 +351,11 @@ class MainActivity : Activity() {
             }
 
             with(ColorDialog(this, "Select Gradient End Color", color)) {
-                button_colorPickerCancel.setOnClickListener { _ ->
+                button_colorPickerCancel.setOnClickListener {
                     dismiss()
                 }
 
-                button_colorPickerOk.setOnClickListener { _ ->
+                button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         gradientEndColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
@@ -389,11 +388,11 @@ class MainActivity : Activity() {
             }
 
             with(ColorDialog(this, "Select Dialog Background Color", color)) {
-                button_colorPickerCancel.setOnClickListener { _ ->
+                button_colorPickerCancel.setOnClickListener {
                     dismiss()
                 }
 
-                button_colorPickerOk.setOnClickListener { _ ->
+                button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         dialogBgColor = textView_hexCode.text as String
                         val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"

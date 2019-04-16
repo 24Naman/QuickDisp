@@ -9,7 +9,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cardView_dialogIcon"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:layout_weight="0.4"
         app:cardCornerRadius="20dp"
@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/imageView_currentSetting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/icon_for_current_settings"
             android:src="@drawable/default_icon" />
