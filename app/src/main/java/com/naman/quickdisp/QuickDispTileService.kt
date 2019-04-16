@@ -30,9 +30,8 @@ class QuickDispTileService : TileService() {
 
         val screenTimeoutDetails = getScreenTimeoutDetails()
         quickSQLData = QuickSQL(this).getData()
-        val timeout = screenTimeoutDetails.first
 
-        val messagePart = when (timeout) {
+        val messagePart = when (val timeout = screenTimeoutDetails.first) {
             15, 30 -> // seconds
                 "$timeout Seconds"
             else -> {
@@ -64,7 +63,7 @@ class QuickDispTileService : TileService() {
 
         with(titleBackground.cardView_details) {
             // custom gradient colors
-            background = android.graphics.drawable.GradientDrawable(
+            background = GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
                 intArrayOf(
                     quickSQLData.startColorRgb,
@@ -80,15 +79,17 @@ class QuickDispTileService : TileService() {
             titleBackground.textView_userName.text = when (quickSQLData.showUserNameOnDialog) {
                 true -> with(contentResolver) {
                     try {
-                        this.query(
+                        query(
                             ContactsContract.Profile.CONTENT_URI,
                             null,
                             null,
                             null,
                             null
-                        ).let {
-                            it?.moveToFirst()
-                            "${it?.getString(it.getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))}'s"
+                        )?.run {
+                            moveToFirst()
+                            val name = "${getString(getColumnIndex(ContactsContract.Profile.DISPLAY_NAME))}'s"
+                            close()
+                            name
                         }
                     } catch (e: CursorIndexOutOfBoundsException) {
                         resources.getString(R.string.username)
@@ -118,7 +119,7 @@ class QuickDispTileService : TileService() {
 
         with(dialogBackground.cardView_dialogIcon) {
             // custom gradient colors
-            background = android.graphics.drawable.GradientDrawable(
+            background = GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
                 intArrayOf(
                     quickSQLData.endColorRgb,
@@ -134,7 +135,7 @@ class QuickDispTileService : TileService() {
 
         with(dialogBackground.cardView_dialogButtons) {
             // custom gradient colors
-            background = android.graphics.drawable.GradientDrawable(
+            background = GradientDrawable(
                 GradientDrawable.Orientation.TL_BR,
                 intArrayOf(
                     quickSQLData.startColorRgb,
@@ -168,8 +169,7 @@ class QuickDispTileService : TileService() {
                 )
                 when (quickSQLData.autoCloseDialog) {
                     true -> {
-                        val timeout = getScreenTimeoutDetails().first
-                        val messagePart = when (timeout) {
+                        val messagePart = when (val timeout = getScreenTimeoutDetails().first) {
                             15, 30 -> // seconds
                                 "$timeout Seconds"
                             else -> {
@@ -237,7 +237,6 @@ class QuickDispTileService : TileService() {
                         (createdDialog as AlertDialog).dismiss()
                     }
                 }
-
                 createdDialog
             }
         )
