@@ -250,6 +250,9 @@ class MainActivity : Activity() {
                                     } catch (e: CursorIndexOutOfBoundsException) {
                                         raiseLongToast("Username not available")
                                         "My"
+                                    } catch (throwable: Throwable) {
+                                        raiseLongToast("Username could not be fetched")
+                                        "My"
                                     }
                                 }
                                 queryCursor?.close()
