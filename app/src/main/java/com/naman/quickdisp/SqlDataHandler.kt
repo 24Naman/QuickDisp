@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
+import java.util.*
 
 data class QuickSQLData(
     val bgColor: String,
@@ -148,7 +149,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         set(value) = with(writableDatabase) {
             updateAllRecords(
                 ContentValues().apply {
-                    put(bgColor, value.subSequence(1, 7).toString().toUpperCase())
+                    put(bgColor, value.subSequence(1, 7).toString().toUpperCase(Locale.getDefault()))
                 }
             )
             close()
@@ -158,7 +159,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         set(value) = with(writableDatabase) {
             updateAllRecords(
                 ContentValues().apply {
-                    put(startColor, value.subSequence(1, 7).toString().toUpperCase())
+                    put(startColor, value.subSequence(1, 7).toString().toUpperCase(Locale.getDefault()))
                 }
             )
             close()
@@ -168,7 +169,7 @@ class QuickSQL(context: Context) : SQLiteOpenHelper(context, "app_settings.db", 
         set(value) = with(writableDatabase) {
             updateAllRecords(
                 ContentValues().apply {
-                    put(endColor, value.subSequence(1, 7).toString().toUpperCase())
+                    put(endColor, value.subSequence(1, 7).toString().toUpperCase(Locale.getDefault()))
                 }
             )
             close()
