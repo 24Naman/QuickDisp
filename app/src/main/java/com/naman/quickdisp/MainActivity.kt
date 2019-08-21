@@ -23,6 +23,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.color_picker_dialog.*
 import kotlinx.android.synthetic.main.quick_display_title.*
+import java.util.*
 
 class MainActivity : Activity() {
 
@@ -324,7 +325,9 @@ class MainActivity : Activity() {
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         gradientStartColor = textView_hexCode.text as String
-                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
+                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase(
+                            Locale.getDefault()
+                        )}"
                         this@MainActivity.textView_startColorHex.text = hexCode
                         this@MainActivity.imageView_startColor.setBackgroundColor(Color.rgb(
                             seekBar_redComponent.progress,
@@ -361,7 +364,9 @@ class MainActivity : Activity() {
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         gradientEndColor = textView_hexCode.text as String
-                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
+                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase(
+                            Locale.getDefault())
+                        }"
                         this@MainActivity.textView_endColorHex.text = hexCode
                         this@MainActivity.imageView_endColor.setBackgroundColor(Color.rgb(
                             seekBar_redComponent.progress,
@@ -398,7 +403,9 @@ class MainActivity : Activity() {
                 button_colorPickerOk.setOnClickListener {
                     with(QuickSQL(this@MainActivity)) {
                         dialogBgColor = textView_hexCode.text as String
-                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase()}"
+                        val hexCode = "#${textView_hexCode.text.subSequence(1, 7).toString().toUpperCase(
+                            Locale.getDefault()
+                        )}"
                         this@MainActivity.textView_bgColorHex.text = hexCode
                         this@MainActivity.imageView_bgColor.setBackgroundColor(Color.rgb(
                             seekBar_redComponent.progress,
